@@ -15,7 +15,7 @@ public class DailyAttendance {
   private LocalDate date;
 
   // 曜日
-  private LocalDate dayOfWeek;
+  private char dayOfWeek;
 
   // 勤務開始時刻
   private LocalTime startTime;

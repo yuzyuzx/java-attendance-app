@@ -1,6 +1,7 @@
 create table attendance_records (
   record_id BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   date DATE NOT NULL,
+  day_of_week CHAR(1) NOT NULL,
   start_time TIME NOT NULL,
   end_time TIME NOT NULL,
   work_hours FLOAT NOT NULL,

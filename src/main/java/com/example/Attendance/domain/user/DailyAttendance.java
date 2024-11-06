@@ -8,13 +8,14 @@ import java.time.LocalTime;
 
 @AllArgsConstructor
 @Data
-public class Attendance {
+public class DailyAttendance {
   private long id;
 
-  // 年月日
+  // 月日
   private LocalDate date;
 
-  // 期
+  // 曜日
+  private LocalDate dayOfWeek;
 
   // 勤務開始時刻
   private LocalTime startTime;
@@ -34,7 +35,8 @@ public class Attendance {
   // 休日実働稼働数
   private float workHoursHoliday;
 
-  // 曜日
+  // 曜日タイプ
+  // 平日 土曜 日曜 祝日
   private char dayType;
 
   // 祝日名称

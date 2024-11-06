@@ -1,12 +1,33 @@
-insert into
-attendance_records
-  ( request_date, start_date, end_date, status, create_time, update_time )
+insert into attendance_records (
+  date,
+  start_time,
+  end_time,
+  work_hours,
+  start_time_holiday,
+  end_time_holiday,
+  work_hours_holiday,
+  day_type,
+  holiday_name
+)
 values
-  ( '2024-01-01', '2024-01-01', '2024-01-03', '1',  CURRENT_TIMESTAMP(0), CURRENT_TIMESTAMP(0)),
-  ( '2024-02-01', '2024-02-01', '2024-02-03', '1',  CURRENT_TIMESTAMP(0), CURRENT_TIMESTAMP(0)),
-  ( '2024-03-01', '2024-03-01', '2024-03-03', '2',  CURRENT_TIMESTAMP(0), CURRENT_TIMESTAMP(0)),
-  ( '2024-04-01', '2024-04-01', '2024-04-03', '2',  CURRENT_TIMESTAMP(0), CURRENT_TIMESTAMP(0)),
-  ( '2024-05-01', '2024-05-01', '2024-05-03', '9',  CURRENT_TIMESTAMP(0), CURRENT_TIMESTAMP(0)),
-  ( '2024-06-01', '2024-06-01', '2024-06-03', '9',  CURRENT_TIMESTAMP(0), CURRENT_TIMESTAMP(0)),
-  ( '2024-07-01', '2024-07-01', '2024-07-03', '7',  CURRENT_TIMESTAMP(0), CURRENT_TIMESTAMP(0))
+  ( '2024-10-20', '09:30', '18:00', 7.5, '00:00', '00:00', 0, '0', ''),
+  ( '2024-10-21', '09:30', '18:00', 7.5, '00:00', '00:00', 0, '0', ''),
+  ( '2024-11-02', '09:30', '18:00', 7.5, '00:00', '00:00', 0, '0', ''),
+  ( '2024-11-20', '09:30', '18:00', 7.5, '00:00', '00:00', 0, '0', ''),
+  ( '2024-11-21', '09:30', '18:00', 7.5, '00:00', '00:00', 0, '0', '')
+;
+
+--
+
+insert into periods (
+  period,
+  start_date,
+  end_date,
+  work_hours_month,
+  work_hours_month_holiday,
+  created_at
+)
+values
+  ('10', '2024-09-21', '2024-10-20', 100, 10, CURRENT_TIMESTAMP(0)),
+  ('11', '2024-10-21', '2024-11-20', 150, 0, CURRENT_TIMESTAMP(0))
 ;

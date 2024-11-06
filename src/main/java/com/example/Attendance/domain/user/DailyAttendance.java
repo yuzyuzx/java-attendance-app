@@ -11,11 +11,20 @@ import java.time.LocalTime;
 public class DailyAttendance {
   private long id;
 
-  // 月日
+  // 年月日
   private LocalDate date;
 
+  // 年
+  private String year;
+
+  // 月
+  private String month;
+
+  // 日
+  private String day;
+
   // 曜日
-  private char dayOfWeek;
+  private String dayOfWeek;
 
   // 勤務開始時刻
   private LocalTime startTime;
@@ -24,7 +33,7 @@ public class DailyAttendance {
   private LocalTime endTime;
 
   // 実働稼働数
-  private float workHours;
+  private double workHours;
 
   // 休日勤務開始時刻
   private LocalTime startTimeHoliday;
@@ -33,7 +42,7 @@ public class DailyAttendance {
   private LocalTime endTimeHoliday;
 
   // 休日実働稼働数
-  private float workHoursHoliday;
+  private double workHoursHoliday;
 
   // 曜日タイプ
   // 平日 土曜 日曜 祝日
@@ -41,4 +50,5 @@ public class DailyAttendance {
 
   // 祝日名称
   private String holidayName;
+
 }

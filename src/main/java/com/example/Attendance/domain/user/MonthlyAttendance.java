@@ -2,11 +2,13 @@ package com.example.Attendance.domain.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class MonthlyAttendance {
   /*
@@ -30,7 +32,7 @@ public class MonthlyAttendance {
    */
 
   // 年
-  private LocalDate year;
+  private String year;
 
   // 期
   private String period;
@@ -42,23 +44,23 @@ public class MonthlyAttendance {
   private LocalDate endDate;
 
   // 当月
-  private LocalDate currentMonth;
+  private String currentMonth;
 
   // 前月
-  private LocalDate previousMonth;
+  private String previousMonth;
 
   // 翌月
-  private LocalDate nextMonth;
+  private String nextMonth;
 
   // 実働稼働数
-  private float workHoursMonth;
+  private double workHoursMonth;
 
   // 休日実働稼働数
-  private float workHoursMonthHoliday;
+  private double workHoursMonthHoliday;
 
   // 承認ステータス
   private char applovalStatus;
 
   // 勤怠レコード
-  private List<DailyAttendance> attendanceRecords;
+  private List<DailyAttendance> dailyAttendance;
 }

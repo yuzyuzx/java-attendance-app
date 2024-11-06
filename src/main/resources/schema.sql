@@ -1,13 +1,16 @@
 create table attendance_records (
   record_id BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  date DATE NOT NULL,
+  `date` DATE NOT NULL,
+  `year` VARCHAR(100) NOT NULL,
+  `month` VARCHAR(100) NOT NULL,
+  `day` VARCHAR(100) NOT NULL,
   day_of_week CHAR(1) NOT NULL,
   start_time TIME NOT NULL,
   end_time TIME NOT NULL,
-  work_hours FLOAT NOT NULL,
+  work_hours DOUBLE NOT NULL,
   start_time_holiday TIME NOT NULL,
   end_time_holiday TIME NOT NULL,
-  work_hours_holiday FLOAT NOT NULL,
+  work_hours_holiday DOUBLE NOT NULL,
   day_type CHAR(1) NOT NULL,
   holiday_name VARCHAR(255)
 );

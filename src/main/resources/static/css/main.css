@@ -1,0 +1,21 @@
+/* 小さい画面でテーブルの固定幅を設定 */
+@media (max-width: 1200px) {
+    .fixed-width {
+        width: 1200px; /* 固定幅 */
+    }
+}
+
+/* 土曜の背景色をカスタムクラスで設定 */
+.bg-custom-sat {
+    background-color: #E0F7FA !important;
+}
+
+/* 日の背景色をカスタムクラスで設定 */
+.bg-custom-holiday {
+    background-color: #FF9999 !important;
+}
+
+.text-center-input {
+    vertical-align: middle;
+    text-align: center;
+}

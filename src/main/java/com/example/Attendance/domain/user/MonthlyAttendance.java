@@ -16,7 +16,7 @@ public class MonthlyAttendance {
   private String year;
 
   // 期
-  private String period;
+//  private String period;
 
   // 開始日
   private LocalDate startDate;
@@ -24,14 +24,14 @@ public class MonthlyAttendance {
   // 終了日
   private LocalDate endDate;
 
-  // 当月
-  private String currentMonth;
+  // 当期
+  private String currentPeriod;
 
-  // 前月
-  private String previousMonth;
+  // 前期
+  private String previousPeriod;
 
-  // 翌月
-  private String nextMonth;
+  // 翌期
+  private String nextPeriod;
 
   // 実働稼働数
   private double workHoursMonth;

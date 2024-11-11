@@ -9,9 +9,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AttendanceService {
 
-  private final AttendanceRepository repository;
+//  private final AttendanceRepository repository;
 
-  public List<DailyAttendance> fetchAttendanceRecords() {
-    return repository.fetchAttendanceRecords();
-  }
+//  public List<DailyAttendance> fetchAttendanceRecords() {
+//    return repository.fetchAttendanceRecords();
+//  }
 }

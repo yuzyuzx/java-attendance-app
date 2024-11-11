@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -11,26 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class MonthlyAttendance {
-  /*
-    {
-      "年": "2024",
-      "期": "11",
-      "開始日": "20241021",
-      "終了日": "20241120",
-      "当月": "202411",
-      "前月": "202410",
-      "翌月": "202412",
-      "実働時間数": "100",
-      "休日時間数": "10",
-      "承認ステータス": "0|1|2",
-      [
-        {DailyAttendance.class},
-        {DailyAttendance.class},
-        ...
-      ]
-    }
-   */
-
   // 年
   private String year;
 

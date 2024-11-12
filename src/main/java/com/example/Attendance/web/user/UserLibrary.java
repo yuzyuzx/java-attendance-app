@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 
 @Component
 public class UserLibrary {
@@ -55,5 +56,10 @@ public class UserLibrary {
   public LocalDate getEndDate(LocalDate now) {
     YearMonth ym = getCurrentPeriod(now);
     return LocalDate.of(ym.getYear(), ym.getMonthValue(), 20);
+  }
+
+  public String dateTimeFormatter(YearMonth d, String pettern) {
+    DateTimeFormatter f = DateTimeFormatter.ofPattern(pettern);
+    return f.format(d);
   }
 }

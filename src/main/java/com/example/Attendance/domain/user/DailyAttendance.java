@@ -15,14 +15,17 @@ public class DailyAttendance {
   // 年月日
   private LocalDate date;
 
+  // 期
+  private String period;
+
   // 年
-  private String year;
+//  private String year;
 
   // 月
-  private String month;
+//  private String month;
 
   // 日
-  private String day;
+//  private String day;
 
   // 曜日
   private String dayOfWeek;

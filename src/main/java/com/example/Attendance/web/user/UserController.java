@@ -30,19 +30,25 @@ public class UserController {
 //    return d.format(now);
 
     // 新規登録時
-    monthlyAttendance.setYear(String.valueOf(now.getYear()));
-    monthlyAttendance.setStartDate(LocalDate.parse(String.valueOf(lib.getStartDate(now))));
-    monthlyAttendance.setEndDate(LocalDate.parse(String.valueOf(lib.getEndDate(now))));
-    monthlyAttendance.setCurrentPeriod(String.valueOf(lib.getCurrentPeriod(now)));
-    monthlyAttendance.setPreviousPeriod(String.valueOf(lib.getPreviousPeriod(now)));
-    monthlyAttendance.setNextPeriod(String.valueOf(lib.getNextPeriod(now)));
-    monthlyAttendance.setWorkHoursMonth(0);
-    monthlyAttendance.setWorkHoursMonthHoliday(0);
-    monthlyAttendance.setApplovalStatus('0');
+//    monthlyAttendance.setYear(String.valueOf(now.getYear()));
+//    monthlyAttendance.setStartDate(LocalDate.parse(String.valueOf(lib.getStartDate(now))));
+//    monthlyAttendance.setEndDate(LocalDate.parse(String.valueOf(lib.getEndDate(now))));
+//    monthlyAttendance.setCurrentPeriod(String.valueOf(lib.getCurrentPeriod(now)));
+//    monthlyAttendance.setPreviousPeriod(String.valueOf(lib.getPreviousPeriod(now)));
+//    monthlyAttendance.setNextPeriod(String.valueOf(lib.getNextPeriod(now)));
+//    monthlyAttendance.setWorkHoursMonth(0);
+//    monthlyAttendance.setWorkHoursMonthHoliday(0);
+//    monthlyAttendance.setApplovalStatus('0');
     // /新規登録時
 
-    // 既存データ取得時
+    // 既存データ
+    // 月データ取得
 
+
+
+    // 日別データ取得
+    String period = lib.dateTimeFormatter(lib.getCurrentPeriod(now), "yyyyMM");
+    List<DailyAttendance> dailyAttendance = attendanceService.fetchAttendanceWithinPeriod(period);
 //    List<DailyAttendance> dailyAttendance = attendanceService.fetchAttendanceRecords();
 //    for(DailyAttendance obj : dailyAttendance) {
 //      if(Objects.equals(obj.getDayOfWeek(), "6")) {
@@ -50,7 +56,6 @@ public class UserController {
 //      }
 //    }
 //    monthlyAttendance.setDailyAttendance(dailyAttendance);
-//
 //    model.addAttribute("data", monthlyAttendance);
 
     return "user/index";

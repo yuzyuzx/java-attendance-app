@@ -15,9 +15,6 @@ public class DailyAttendance {
   // 年月日
   private LocalDate date;
 
-  // 期 不要にする
-  private String period;
-
   // 曜日
   private String dayOfWeek;
 

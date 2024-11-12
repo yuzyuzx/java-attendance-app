@@ -11,11 +11,11 @@ public class AttendanceService {
 
   private final AttendanceRepository repository;
 
-//  public List<DailyAttendance> fetchAttendanceRecords() {
-//    return repository.fetchAttendanceRecords();
-//  }
+  public List<DailyAttendance> fetchAttendanceRecords() {
+    return repository.fetchAttendanceRecords();
+  }
 
-  public List<DailyAttendance> fetchAttendanceWithinPeriod(String period) {
-    return repository.fetchAttendanceWithinPeriod(period);
+  public List<DailyAttendance> fetchAttendanceWithinPeriod() {
+    return repository.fetchAttendanceWithinPeriod();
   }
 }

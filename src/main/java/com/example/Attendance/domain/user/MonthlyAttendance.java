@@ -12,11 +12,14 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class MonthlyAttendance {
+  // 期
+  private String period;
+
   // 年
   private String year;
 
-  // 期
-//  private String period;
+  // 月
+  private String month;
 
   // 開始日
   private LocalDate startDate;

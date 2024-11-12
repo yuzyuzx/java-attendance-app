@@ -14,4 +14,8 @@ public class AttendanceService {
   public List<DailyAttendance> fetchAttendanceRecords() {
     return repository.fetchAttendanceRecords();
   }
+
+  public List<DailyAttendance> fetchAttendanceWithinPeriod() {
+    return repository.fetchAttendanceWithinPeriod();
+  }
 }

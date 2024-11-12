@@ -82,50 +82,5 @@
     </div>
   </form>
 </div>
-<br />
-以下、送信テスト用？で残してます。
-<br />
-<br />
-<br />
-<br />
-<p>ユーザー画面</p>
-<p th:text="${data.workHoursMonth}"></p>
-
-<!--<form th:action="@{/user}" th:method="post" th:object="${monthlyAttendanceForm}">-->
-<form th:method="post" th:object="${data}">
-  <label for="work_hours_month"></label><input
-    type="text"
-    id="work_hours_month"
-    th:field="*{workHoursMonth}"
-    />
-  <br>
-
-  <table class="table table-striped">
-    <thead>
-    <tr>
-      <th>日付</th>
-      <th>開始</th>
-      <th>終了</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="v, st : *{dailyAttendance}">
-      <td>
-        <label th:text="${v.date}"></label>
-      </td>
-      <td>
-        <input type="text" th:field="*{dailyAttendance[__${st.index}__].startTime}">
-      </td>
-      <td>
-        <input type="text" th:field="*{dailyAttendance[__${st.index}__].endTime}">
-      </td>
-      <td>
-      <input type="hidden" th:field="*{dailyAttendance[__${st.index}__].date}">
-      </td>
-    </tr>
-    </tbody>
-  </table>
-  <button type="submit">送信</button>
-</form>
 </body>
 </html>

@@ -24,7 +24,10 @@ public class UserController {
   @GetMapping
   public String index(Model model) {
     MonthlyAttendance monthlyAttendance = new MonthlyAttendance();
-    monthlyAttendance.setDailyAttendance(attendanceService.fetchAttendanceWithinPeriod());
+
+    List<DailyAttendance> dailyAttendanceList = attendanceService.fetchAttendanceWithinPeriod();
+    monthlyAttendance.setDailyAttendance(dailyAttendanceList);
+
     model.addAttribute("data", monthlyAttendance);
 
     return "user/index";

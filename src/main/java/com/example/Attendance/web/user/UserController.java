@@ -30,15 +30,15 @@ public class UserController {
 //    return d.format(now);
 
     // 新規登録時
-//    monthlyAttendance.setYear(String.valueOf(now.getYear()));
-//    monthlyAttendance.setStartDate(LocalDate.parse(String.valueOf(lib.getStartDate(now))));
-//    monthlyAttendance.setEndDate(LocalDate.parse(String.valueOf(lib.getEndDate(now))));
-//    monthlyAttendance.setCurrentPeriod(String.valueOf(lib.getCurrentPeriod(now)));
-//    monthlyAttendance.setPreviousPeriod(String.valueOf(lib.getPreviousPeriod(now)));
-//    monthlyAttendance.setNextPeriod(String.valueOf(lib.getNextPeriod(now)));
-//    monthlyAttendance.setWorkHoursMonth(0);
-//    monthlyAttendance.setWorkHoursMonthHoliday(0);
-//    monthlyAttendance.setApplovalStatus('0');
+    monthlyAttendance.setYear(String.valueOf(now.getYear()));
+    monthlyAttendance.setStartDate(LocalDate.parse(String.valueOf(lib.getStartDate(now))));
+    monthlyAttendance.setEndDate(LocalDate.parse(String.valueOf(lib.getEndDate(now))));
+    monthlyAttendance.setCurrentPeriod(String.valueOf(lib.getCurrentPeriod(now)));
+    monthlyAttendance.setPreviousPeriod(String.valueOf(lib.getPreviousPeriod(now)));
+    monthlyAttendance.setNextPeriod(String.valueOf(lib.getNextPeriod(now)));
+    monthlyAttendance.setWorkHoursMonth(0);
+    monthlyAttendance.setWorkHoursMonthHoliday(0);
+    monthlyAttendance.setApplovalStatus('0');
     // /新規登録時
 
     // 既存データ
@@ -49,20 +49,24 @@ public class UserController {
     // 日別データ取得
     String period = lib.dateTimeFormatter(lib.getCurrentPeriod(now), "yyyyMM");
     List<DailyAttendance> dailyAttendance = attendanceService.fetchAttendanceWithinPeriod(period);
-//    List<DailyAttendance> dailyAttendance = attendanceService.fetchAttendanceRecords();
 //    for(DailyAttendance obj : dailyAttendance) {
 //      if(Objects.equals(obj.getDayOfWeek(), "6")) {
 //        obj.setDayOfWeek("土");
 //      }
 //    }
-//    monthlyAttendance.setDailyAttendance(dailyAttendance);
-//    model.addAttribute("data", monthlyAttendance);
+    monthlyAttendance.setDailyAttendance(dailyAttendance);
+    model.addAttribute("data", monthlyAttendance);
 
     return "user/index";
   }
 
   @PostMapping
   public String userForm(MonthlyAttendanceForm form, Model model) {
+    char status = '0';
+    if(form.getAction().equals("approval-request")) {
+      status = '1';
+    }
+
     MonthlyAttendance monthlyAttendance = new MonthlyAttendance();
 //    monthlyAttendance.setYear("2024");
 //    monthlyAttendance.setPeriod("11");

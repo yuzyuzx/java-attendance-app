@@ -31,18 +31,28 @@
         <label th:text="${v.date}"></label>
       </td>
       <td>
+        <input type="hidden" th:field="*{dailyAttendance[__${st.index}__].date}">
+      </td>
+      <td>
+        <input type="text" th:field="*{dailyAttendance[__${st.index}__].dayOfWeek}">
+      </td>
+      <td>
+        <input type="text" th:field="*{dailyAttendance[__${st.index}__].dayType}">
+      </td>
+      <td>
         <input type="text" th:field="*{dailyAttendance[__${st.index}__].startTime}">
       </td>
       <td>
         <input type="text" th:field="*{dailyAttendance[__${st.index}__].endTime}">
       </td>
       <td>
-      <input type="hidden" th:field="*{dailyAttendance[__${st.index}__].date}">
+        <input type="text" th:field="*{dailyAttendance[__${st.index}__].comment}">
       </td>
     </tr>
     </tbody>
   </table>
-  <button type="submit">送信</button>
+  <button type="submit" name="action" value="approval-request">承認依頼</button>
+  <button type="submit" name="action" value="save">登録</button>
 </form>
 </body>
 </html>

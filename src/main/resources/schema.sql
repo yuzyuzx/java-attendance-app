@@ -16,7 +16,7 @@ create table attendance_records (
 
 --
 
-create table periods (
+create table monthly_attendance (
   period_id BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   period VARCHAR(10),
   start_date DATE NOT NULL,
@@ -28,7 +28,7 @@ create table periods (
 
 --
 
-create table approval_period (
+create table approval (
   `period` VARCHAR(10) NOT NULL,
   `status` CHAR(1) NOT NULL,
   `requested_at` TIMESTAMP NOT NULL,

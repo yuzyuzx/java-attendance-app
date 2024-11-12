@@ -10,6 +10,6 @@ public interface AttendanceRepository {
   @Select("select * from attendance_records")
   List<DailyAttendance> fetchAttendanceRecords();
 
-  @Select("select * from attendance_records where period = #{period}")
+  @Select("select * from attendance_records where period = #{period} order by date")
   List<DailyAttendance> fetchAttendanceWithinPeriod(String period);
 }

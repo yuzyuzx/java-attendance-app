@@ -15,17 +15,8 @@ public class DailyAttendance {
   // 年月日
   private LocalDate date;
 
-  // 期
+  // 期 不要にする
   private String period;
-
-  // 年
-//  private String year;
-
-  // 月
-//  private String month;
-
-  // 日
-//  private String day;
 
   // 曜日
   private String dayOfWeek;
@@ -48,9 +39,11 @@ public class DailyAttendance {
   // 休日実働稼働数
   private double workHoursHoliday;
 
-  // 曜日タイプ
-  // 平日 土曜 日曜 祝日
+  // 曜日タイプ 平日 土曜 日曜 祝日
   private char dayType;
+
+  // 備考
+  private String comment;
 
   // 祝日名称
   private String holidayName;

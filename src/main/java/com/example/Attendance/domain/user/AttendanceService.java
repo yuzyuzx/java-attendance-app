@@ -3,6 +3,7 @@ package com.example.Attendance.domain.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -15,8 +16,8 @@ public class AttendanceService {
     return repository.fetchAttendanceRecords();
   }
 
-  public List<DailyAttendance> fetchAttendanceWithinPeriod() {
-    return repository.fetchAttendanceWithinPeriod();
+  public List<DailyAttendance> fetchAttendanceWithinPeriod(LocalDate startDate, LocalDate endDate) {
+    return repository.fetchAttendanceWithinPeriod(startDate, endDate);
   }
 
   public MonthlyPeriod fetchMonthlyPeriod(String period) {

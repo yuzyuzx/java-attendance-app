@@ -17,13 +17,12 @@ create table attendance_records (
 
 --
 
-create table monthly_attendance (
-  period_id BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+create table monthly_period (
   period VARCHAR(10),
   start_date DATE NOT NULL,
   end_date DATE NOT NULL,
-  work_hours_month FLOAT NOT NULL,
-  work_hours_month_holiday FLOAT NOT NULL,
+  work_hours_month DOUBLE NOT NULL,
+  work_hours_month_holiday DOUBLE NOT NULL,
   created_at TIMESTAMP NOT NULL
 );
 

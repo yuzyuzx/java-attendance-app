@@ -4,28 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class MonthlyAttendance {
-  // 期
-  private String period;
-
   // 年
   private String year;
 
   // 月
   private String month;
-
-  // 開始日
-  private LocalDate startDate;
-
-  // 終了日
-  private LocalDate endDate;
 
   // 当期
   private String currentPeriod;
@@ -36,14 +25,11 @@ public class MonthlyAttendance {
   // 翌期
   private String nextPeriod;
 
-  // 実働稼働数
-  private double workHoursMonth;
-
-  // 休日実働稼働数
-  private double workHoursMonthHoliday;
+  // 期のデータ
+  private MonthlyPeriod monthlyPeriod;
 
   // 承認ステータス
-  private char applovalStatus;
+  private Approval approval;
 
   // 勤怠レコード
   private List<DailyAttendance> dailyAttendance;

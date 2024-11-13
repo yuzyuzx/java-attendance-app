@@ -1,25 +1,17 @@
 package com.example.Attendance.web.user;
 
-import com.example.Attendance.domain.user.DailyAttendance;
 import lombok.Data;
 
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 @Data
 public class MonthlyAttendanceForm {
-  // 期
-  private String period;
+  // 月のデータ
+  private MonthlyPeriodForm monthlyPeriodForm;
 
-  // 実働稼働数
-  private double workHoursMonth;
-
-  // 休日実働稼働数
-  private double workHoursMonthHoliday;
-
-  private String action;
-
+  // 日別勤怠データ
   private List<DailyAttendanceForm> dailyAttendance;
+
+  // 処理ボタン
+  private String action;
 }

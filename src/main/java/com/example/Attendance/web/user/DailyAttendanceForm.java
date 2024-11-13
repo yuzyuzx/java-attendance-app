@@ -8,9 +8,14 @@ import java.time.LocalTime;
 
 @Data
 public class DailyAttendanceForm {
-
   // 年月日
   private LocalDate date;
+
+  // 月
+  private String month;
+
+  // 日
+  private String day;
 
   // 曜日
   private String dayOfWeek;

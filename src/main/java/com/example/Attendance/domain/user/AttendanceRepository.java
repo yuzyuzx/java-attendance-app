@@ -12,4 +12,12 @@ public interface AttendanceRepository {
 
   @Select("select * from attendance_records where date between '2024-10-21' and '2024-11-20' order by date")
   List<DailyAttendance> fetchAttendanceWithinPeriod();
+
+  @Select("select * from monthly_period where period = #{period}")
+  MonthlyPeriod fetchMonthlyPeriod(String period);
+
+  @Select("select * from approval where period = #{period}")
+  Approval fetchApproval(String period);
+
+
 }

@@ -3,7 +3,7 @@ package com.example.Attendance.domain.user;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.io.Serializable;
+import java.beans.Transient;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -19,7 +19,7 @@ public class DailyAttendance {
   private String month;
 
   // 日
-  private  String day;
+  private String day;
 
   // 曜日
   private String dayOfWeek;

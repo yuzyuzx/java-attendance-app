@@ -1,8 +1,6 @@
 package com.example.Attendance.web.user;
 
-import com.example.Attendance.domain.user.AttendanceService;
-import com.example.Attendance.domain.user.DailyAttendance;
-import com.example.Attendance.domain.user.MonthlyAttendance;
+import com.example.Attendance.domain.user.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -18,15 +15,21 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
 
-  private final AttendanceService attendanceService;
+  private final AttendanceService service;
   private final UserLibrary lib;
 
   @GetMapping
   public String index(Model model) {
-    MonthlyAttendance monthlyAttendance = new MonthlyAttendance();
+    String period = "202411";
 
-    List<DailyAttendance> dailyAttendanceList = attendanceService.fetchAttendanceWithinPeriod();
-    monthlyAttendance.setDailyAttendance(dailyAttendanceList);
+    MonthlyAttendance monthlyAttendance = new MonthlyAttendance();
+    monthlyAttendance.setApproval(service.fetchApproval(period));
+    monthlyAttendance.setMonthlyPeriod(service.fetchMonthlyPeriod(period));
+    monthlyAttendance.setDailyAttendance(service.fetchAttendanceWithinPeriod());
+
+//    monthlyAttendance.setYear("2024");
+//    monthlyAttendance.setMonth("11");
+//    monthlyAttendance.setCurrentPeriod("202411");
 
     model.addAttribute("data", monthlyAttendance);
 

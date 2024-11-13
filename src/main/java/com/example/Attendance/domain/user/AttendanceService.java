@@ -18,4 +18,12 @@ public class AttendanceService {
   public List<DailyAttendance> fetchAttendanceWithinPeriod() {
     return repository.fetchAttendanceWithinPeriod();
   }
+
+  public MonthlyPeriod fetchMonthlyPeriod(String period) {
+    return repository.fetchMonthlyPeriod(period);
+  }
+
+  public Approval fetchApproval(String period) {
+    return repository.fetchApproval(period);
+  }
 }

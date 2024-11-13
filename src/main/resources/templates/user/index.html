@@ -13,19 +13,7 @@
   <h2 class="text-center mb-5">勤怠入力</h2>
   <h3 class="text-center mb-4 attendance-period">TEST</h3>
 
-  <form th:action="@{/get}" method="post">
-    <div class="row">
-      <div class="d-flex justify-content-end mb-1 col-12">
-        <button style="" type="submit" class="btn btn-secondary mx-1 search" th:value="-1">前月</button>
-        <button style="" type="submit" class="btn btn-secondary mx-1 search" th:value="0">当月</button>
-        <button style="" type="submit" class="btn btn-secondary mx-1 search" th:value="1">来月</button>
-        <input type="hidden" id="year" name="month" th:value="${data.year}" />
-        <input type="hidden" id="period" name="month" th:value="${data.period}" />
-      </div>
-    </div>
-  </form>
-
-  <form th:action="@{/get}" method="post">
+  <form method="post">
     <div class="row">
       <div class="col-12 mb-3" style="overflow-x: auto; max-width: 100%;">
         <table class="table table-bordered fixed-width">
@@ -46,33 +34,17 @@
             <th class="text-center">終了</th>
           </tr>
           </thead>
-          <tbody>
-          <!-- 10/1から10/10までの行をループで表示 -->
-          <!-- 任意のデータを設定するため、手動で曜日を記載-->
-            <tr class="attendance-tr" th:each="item, iterStat : ${data.dailyAttendance}" th:object="${data}">
-              <!--/*<td class="text-center align-middle" th:text="${item.id}" th:classappend="|${item.id == '日' ? 'bg-custom-holiday' : ''} ${item.id == '土' ? 'bg-custom-sat' : ''}|"></td>*/-->
-              <!--/*<td class="text-center align-middle" th:text="${item.month} + '/' + ${item.day} + '//' + ${item.dayType}" th:classappend="(${item.dayType} == '2' or ${item.dayType} == '3') ? 'bg-custom-holiday' : (${item.dayType} == '1' ? 'bg-custom-sat' : '')"></td>*/-->
-              <td class="text-center align-middle" th:text="${item.month} + '/' + ${item.day}" th:classappend="(${item.dayType} == '2' or ${item.dayType} == '3') ? 'bg-custom-holiday' : (${item.dayType} == '1' ? 'bg-custom-sat' : '')"></td>
-              <td class="text-center align-middle" th:text="${item.dayOfWeek}" th:classappend="(${item.dayType} == '2' or ${item.dayType} == '3') ? 'bg-custom-holiday' : (${item.dayType} == '1' ? 'bg-custom-sat' : '')"></td>
-              <td class="" th:classappend="(${item.dayType} == '2' or ${item.dayType} == '3') ? 'bg-custom-holiday' : (${item.dayType} == '1' ? 'bg-custom-sat' : '')"><input type="text" class="form-control text-center-input businessday-start" th:field="*{dailyAttendance[__${iterStat.index}__].startTime}" th:attr="disabled=${item.dayType} != '0'"></td>
-              <td class="" th:classappend="(${item.dayType} == '2' or ${item.dayType} == '3') ? 'bg-custom-holiday' : (${item.dayType} == '1' ? 'bg-custom-sat' : '')"><input type="text" class="form-control text-center-input businessday-end" th:field="*{dailyAttendance[__${iterStat.index}__].endTime}" th:attr="disabled=${item.dayType} != '0'"></td>
-              <td class="" th:classappend="(${item.dayType} == '2' or ${item.dayType} == '3') ? 'bg-custom-holiday' : (${item.dayType} == '1' ? 'bg-custom-sat' : '')"><input type="text" class="form-control text-center-input holiday-start" th:field="*{dailyAttendance[__${iterStat.index}__].startTimeHoliday}" th:attr="disabled=${item.dayType} == '0'"></td>
-              <td class="" th:classappend="(${item.dayType} == '2' or ${item.dayType} == '3') ? 'bg-custom-holiday' : (${item.dayType} == '1' ? 'bg-custom-sat' : '')"><input type="text" class="form-control text-center-input holiday-end" th:field="*{dailyAttendance[__${iterStat.index}__].endTimeHoliday}" th:attr="disabled=${item.dayType} == '0'"></td>
-              <td class="text-center align-middle businessday-time" th:text="${item.workHours}" th:classappend="(${item.dayType} == '2' or ${item.dayType} == '3') ? 'bg-custom-holiday' : (${item.dayType} == '1' ? 'bg-custom-sat' : '')"></td>
-              <td class="text-center align-middle holiday-time" th:text="${item.workHoursHoliday}" th:classappend="(${item.dayType} == '2' or ${item.dayType} == '3') ? 'bg-custom-holiday' : (${item.dayType} == '1' ? 'bg-custom-sat' : '')"></td>
-              <td class="" th:classappend="(${item.dayType} == '2' or ${item.dayType} == '3') ? 'bg-custom-holiday' : (${item.dayType} == '1' ? 'bg-custom-sat' : '')"><input type="text" class="form-control" th:value="*{dailyAttendance[__${iterStat.index}__].holidayName}" ></td>
-            </tr>
-          </tbody>
           <tfoot>
             <tr>
               <td colspan="6" class="text-center">合計</td>
-              <td class="text-center businessday-time-total" th:text="${data.workHoursMonth}"></td>
-              <td class="text-center holiday-time-total" th:text="${data.workHoursMonthHoliday}"></td>
+              <td class="text-center businessday-time-total" th:field="${data.monthlyPeriod.workHoursMonth}" th:text="${data.monthlyPeriod.workHoursMonth}"></td>
+              <td class="text-center holiday-time-total" th:text="${data.monthlyPeriod.workHoursMonthHoliday}"></td>
               <td class="text-center"></td>
             </tr>
           </tfoot>
         </table>
       </div>
+      <input type="text" th:value="${data.monthlyPeriod.period}" name="eriod.period" />
       <div class="d-flex justify-content-end col-xl-2 col-sm-3 col-5 order-last">
         <button style="" type="submit" class="btn btn-primary">登録</button>
       </div>

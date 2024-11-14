@@ -18,7 +18,7 @@ create table attendance_records (
 --
 
 create table monthly_period (
-  period VARCHAR(10),
+  `period` VARCHAR(10),
   start_date DATE NOT NULL,
   end_date DATE NOT NULL,
   work_hours_month DOUBLE NOT NULL,

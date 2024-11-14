@@ -27,8 +27,8 @@ public class UserController {
     YearMonth period = lib.getCurrentPeriod(lib.getLocalDate());
 //    lib.debugDate(period);
 
-    MonthlyAttendance monthlyAttendance = lib.setAttendanceData(service, period);
-    model.addAttribute("data", monthlyAttendance);
+    ShowMonthlyAttendance ShowMonthlyAttendance = lib.setAttendanceData(service, period);
+    model.addAttribute("data", ShowMonthlyAttendance);
 
     return "user/index";
   }
@@ -41,8 +41,8 @@ public class UserController {
   @GetMapping("/{period}")
   public String test(Model model, @PathVariable("period") YearMonth period) {
 //    lib.debugDate(period);
-    MonthlyAttendance monthlyAttendance = lib.setAttendanceData(service, period);
-    model.addAttribute("data", monthlyAttendance);
+//    MonthlyAttendance monthlyAttendance = lib.setAttendanceData(service, period);
+//    model.addAttribute("data", monthlyAttendance);
 
     return "user/index";
   }

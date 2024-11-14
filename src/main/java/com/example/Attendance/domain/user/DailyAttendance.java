@@ -3,7 +3,6 @@ package com.example.Attendance.domain.user;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.beans.Transient;
 import java.time.LocalDate;
 import java.time.LocalTime;
 

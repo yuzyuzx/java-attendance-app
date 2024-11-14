@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.YearMonth;
 import java.util.List;
 
 @AllArgsConstructor
@@ -17,13 +18,13 @@ public class MonthlyAttendance {
   private String month;
 
   // 当期
-  private String currentPeriod;
+  private YearMonth currentPeriod;
 
   // 前期
-  private String previousPeriod;
+  private YearMonth previousPeriod;
 
   // 翌期
-  private String nextPeriod;
+  private YearMonth nextPeriod;
 
   // 期のデータ
   private MonthlyPeriod monthlyPeriod;

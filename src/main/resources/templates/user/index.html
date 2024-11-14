@@ -35,12 +35,12 @@
           </tr>
           </thead>
           <tfoot>
-            <tr>
-              <td colspan="6" class="text-center">合計</td>
-              <td class="text-center businessday-time-total" th:field="${data.monthlyPeriod.workHoursMonth}" th:text="${data.monthlyPeriod.workHoursMonth}"></td>
-              <td class="text-center holiday-time-total" th:text="${data.monthlyPeriod.workHoursMonthHoliday}"></td>
-              <td class="text-center"></td>
-            </tr>
+          <tr>
+            <td colspan="6" class="text-center">合計</td>
+            <td class="text-center businessday-time-total" th:field="${data.monthlyPeriod.workHoursMonth}" th:text="${data.monthlyPeriod.workHoursMonth}"></td>
+            <td class="text-center holiday-time-total" th:text="${data.monthlyPeriod.workHoursMonthHoliday}"></td>
+            <td class="text-center"></td>
+          </tr>
           </tfoot>
         </table>
       </div>

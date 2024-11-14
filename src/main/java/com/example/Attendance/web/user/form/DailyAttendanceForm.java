@@ -1,8 +1,7 @@
-package com.example.Attendance.web.user;
+package com.example.Attendance.web.user.form;
 
 import lombok.Data;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 

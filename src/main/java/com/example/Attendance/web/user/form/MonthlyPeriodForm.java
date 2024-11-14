@@ -1,8 +1,6 @@
-package com.example.Attendance.web.user;
+package com.example.Attendance.web.user.form;
 
 import lombok.Data;
-
-import java.time.LocalDate;
 
 @Data
 public class MonthlyPeriodForm {

@@ -4,7 +4,7 @@ import lombok.Data;
 
 /**
  * 画面表示用クラス
- * 表示するデータはString型で定義する
+ * 表示用に型を変換する
  */
 @Data
 public class ShowMonthlyPeriod {

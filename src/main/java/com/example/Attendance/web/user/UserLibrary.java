@@ -3,8 +3,6 @@ package com.example.Attendance.web.user;
 
 import com.example.Attendance.domain.user.*;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -12,6 +10,7 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.temporal.ChronoUnit;
 
 @Component
 public class UserLibrary {
@@ -76,13 +75,28 @@ public class UserLibrary {
     ShowMonthlyAttendance showMonthlyAttendance = new ShowMonthlyAttendance();
 
     // データ存在確認を行う
-    // DBにデータが存在しない場合処理を続けるとエラーになる
     MonthlyPeriod monthlyPeriod = service.fetchMonthlyPeriod(strPeriod);
+
+    // ▽空の処理
+    if(monthlyPeriod == null) {
+      showMonthlyAttendance.setYear(getYear(period));
+      showMonthlyAttendance.setMonth(getMonth(period));
+      showMonthlyAttendance.setCurrentPeriod(period.toString());
+      showMonthlyAttendance.setPreviousPeriod(getPreviousPeriod(period).toString());
+      showMonthlyAttendance.setNextPeriod(getNextPeriod(period).toString());
+      showMonthlyAttendance.setMonthlyPeriod(setEmptyMonthlyPeriod(period));
+      showMonthlyAttendance.setApproval(setEmptyShowApproval(period));
+      showMonthlyAttendance.setDailyAttendanceList(setEmptyDailyAttendance(period));
+
+      return showMonthlyAttendance;
+    }
+    // △空の処理
+
     ShowMonthlyPeriod showMonthlyPeriod = setShowMonthlyPeriod(monthlyPeriod);
-    showMonthlyAttendance.setShowMonthlyPeriod(showMonthlyPeriod);
+    showMonthlyAttendance.setMonthlyPeriod(showMonthlyPeriod);
 
     Approval approval = service.fetchApproval(strPeriod);
-    showMonthlyAttendance.setApproval(approval);
+    showMonthlyAttendance.setApproval(setShowApproval(approval));
 
     List<DailyAttendance> dailyAttendances = service.fetchAttendanceWithinPeriod(monthlyPeriod.getStartDate(), monthlyPeriod.getEndDate());
     List<ShowDailyAttendance> showDailyAttendanceList = new ArrayList<>();
@@ -90,7 +104,7 @@ public class UserLibrary {
       ShowDailyAttendance showDailyAttendance = setShowDailyAttendance(obj);
       showDailyAttendanceList.add(showDailyAttendance);
     }
-    showMonthlyAttendance.setShowDailyAttendanceList(showDailyAttendanceList);
+    showMonthlyAttendance.setDailyAttendanceList(showDailyAttendanceList);
 
     showMonthlyAttendance.setYear(getYear(period));
     showMonthlyAttendance.setMonth(getMonth(period));
@@ -103,62 +117,146 @@ public class UserLibrary {
 
   /**
    * MonthlyPeriodクラスのプロパティをShowMonthlyPeriodクラスのプロパティに入れ替える
-   * String型に変換するため
    */
   private ShowMonthlyPeriod setShowMonthlyPeriod(MonthlyPeriod obj) {
-    ShowMonthlyPeriod showMonthlyPeriod = new ShowMonthlyPeriod();
-    showMonthlyPeriod.setPeriod(obj.getPeriod());
-    showMonthlyPeriod.setStartDate(obj.getStartDate().toString());
-    showMonthlyPeriod.setEndDate(obj.getEndDate().toString());
-    showMonthlyPeriod.setWorkHoursMonth(
+    ShowMonthlyPeriod show = new ShowMonthlyPeriod();
+    show.setPeriod(obj.getPeriod());
+    show.setStartDate(obj.getStartDate().toString());
+    show.setEndDate(obj.getEndDate().toString());
+    show.setCreatedAt(obj.getCreatedAt().toString());
+
+    show.setWorkHoursMonth(
       obj.getWorkHoursMonth() == 0.0 ? "" : String.valueOf(obj.getWorkHoursMonth())
     );
-    showMonthlyPeriod.setWorkHoursMonthHoliday(
+
+    show.setWorkHoursMonthHoliday(
       obj.getWorkHoursMonthHoliday() == 0.0 ? "" : String.valueOf(obj.getWorkHoursMonthHoliday())
     );
 
-    return showMonthlyPeriod;
+    return show;
+  }
+
+  /**
+   * ApprovalクラスのプロパティをShowApprovalクラスのプロパティに入れ替える
+   */
+  private ShowApproval setShowApproval(Approval obj) {
+    ShowApproval show = new ShowApproval();
+    show.setPeriod(obj.getPeriod());
+    show.setStatus(String.valueOf(obj.getStatus()));
+    show.setRequestedAt(String.valueOf(obj.getRequestedAt()));
+    show.setReviewedAt(String.valueOf(obj.getReviewedAt()));
+
+    return  show;
   }
 
   /**
    * DailyAttendanceクラスのプロパティをShowDailyAttendanceクラスのプロパティに入れ替える
-   * String型に変換するため
    */
   private ShowDailyAttendance setShowDailyAttendance(DailyAttendance obj) {
-    ShowDailyAttendance showDailyAttendance = new ShowDailyAttendance();
-    showDailyAttendance.setDate(String.valueOf(obj.getDate()));
-    showDailyAttendance.setMonth(obj.getMonth());
-    showDailyAttendance.setDay(obj.getDay());
-    showDailyAttendance.setDayOfWeek(obj.getDayOfWeek());
-    showDailyAttendance.setDayType(String.valueOf(obj.getDayType()));
-    showDailyAttendance.setComment(obj.getComment());
-    showDailyAttendance.setHolidayName(obj.getHolidayName());
+    ShowDailyAttendance show = new ShowDailyAttendance();
+    show.setDate(String.valueOf(obj.getDate()));
+    show.setMonth(obj.getMonth());
+    show.setDay(obj.getDay());
+    show.setDayOfWeek(obj.getDayOfWeek());
+    show.setDayType(String.valueOf(obj.getDayType()));
+    show.setComment(obj.getComment());
+    show.setHolidayName(obj.getHolidayName());
 
-    showDailyAttendance.setStartTime(
+    show.setStartTime(
       obj.getStartTime().equals(LocalTime.MIDNIGHT) ? "" : obj.getStartTime().toString()
     );
 
-    showDailyAttendance.setEndTime(
+    show.setEndTime(
       obj.getEndTime().equals(LocalTime.MIDNIGHT) ? "" : obj.getStartTime().toString()
     );
 
-    showDailyAttendance.setWorkHours(
+    show.setWorkHours(
       obj.getWorkHours() == 0.0 ? "" : String.valueOf(obj.getWorkHours())
     );
 
-    showDailyAttendance.setStartTimeHoliday(
+    show.setStartTimeHoliday(
       obj.getStartTimeHoliday().equals(LocalTime.MIDNIGHT) ? "" : obj.getStartTimeHoliday().toString()
     );
 
-    showDailyAttendance.setEndTimeHoliday(
+    show.setEndTimeHoliday(
       obj.getEndTimeHoliday().equals(LocalTime.MIDNIGHT) ? "" : obj.getStartTimeHoliday().toString()
     );
 
-    showDailyAttendance.setWorkHoursHoliday(
+    show.setWorkHoursHoliday(
       obj.getWorkHoursHoliday() == 0.0 ? "" : String.valueOf(obj.getWorkHoursHoliday())
     );
 
-    return showDailyAttendance;
+    return show;
+  }
+
+  private ShowMonthlyPeriod setEmptyMonthlyPeriod(YearMonth period) {
+    ShowMonthlyPeriod show = new ShowMonthlyPeriod();
+
+    show.setPeriod(dateTimeFormatter(period, "yyyyMM"));
+    show.setStartDate(getStartDate(period).toString());
+    show.setEndDate(getEndDate(period).toString());
+    show.setWorkHoursMonth("");
+    show.setWorkHoursMonthHoliday("");
+
+    return show;
+  }
+
+  private ShowApproval setEmptyShowApproval(YearMonth period) {
+    ShowApproval show = new ShowApproval();
+
+    show.setPeriod(dateTimeFormatter(period, "yyyyMM"));
+    show.setStatus("0");
+    show.setReviewedAt("");
+    show.setReviewedAt("");
+
+    return show;
+  }
+
+  private List<ShowDailyAttendance> setEmptyDailyAttendance(YearMonth period) {
+    LocalDate startDate = getStartDate(period);
+    LocalDate endDate = getEndDate(period);
+    long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
+
+    List<ShowDailyAttendance> list = new ArrayList<>();
+    for (int i = 0; i <= daysBetween; i++) {
+      LocalDate currentDate = startDate.plusDays(i);
+
+      ShowDailyAttendance show = new ShowDailyAttendance();
+
+      show.setDate(currentDate.toString());
+      show.setMonth(String.valueOf(currentDate.getMonthValue()));
+      show.setDay(String.valueOf(currentDate.getDayOfMonth()));
+      show.setStartTime("");
+      show.setEndTime("");
+      show.setWorkHours("");
+      show.setStartTimeHoliday("");
+      show.setEndTimeHoliday("");
+      show.setWorkHoursHoliday("");
+      show.setComment("");
+      show.setHolidayName("");
+
+      String dayOfWeek = switch(currentDate.getDayOfWeek().getValue()) {
+        case 1 -> "月";
+        case 2 -> "火";
+        case 3 -> "水";
+        case 4 -> "木";
+        case 5 -> "金";
+        case 6 -> "土";
+        default -> "日";
+      };
+      show.setDayOfWeek(dayOfWeek);
+
+      String dayType = switch(currentDate.getDayOfWeek().getValue()) {
+        case 6 -> "1";
+        case 7 -> "2";
+        default -> "0";
+      };
+      show.setDayType(dayType);
+
+      list.add(show);
+    }
+
+    return list;
   }
 
   public void debugDate(YearMonth period) {

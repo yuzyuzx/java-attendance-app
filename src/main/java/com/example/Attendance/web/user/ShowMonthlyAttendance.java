@@ -1,13 +1,12 @@
 package com.example.Attendance.web.user;
 
-import com.example.Attendance.domain.user.Approval;
 import lombok.Data;
 
 import java.util.List;
 
 /**
  * 画面表示用クラス
- * 表示するデータはString型で定義する
+ * 表示用に型を変換する
  */
 @Data
 public class ShowMonthlyAttendance {
@@ -27,11 +26,11 @@ public class ShowMonthlyAttendance {
   private String nextPeriod;
 
   // 期のデータ
-  private ShowMonthlyPeriod showMonthlyPeriod;
+  private ShowMonthlyPeriod monthlyPeriod;
 
   // 承認ステータス
-  private Approval approval;
+  private ShowApproval approval;
 
   // 勤怠レコード
-  private List<ShowDailyAttendance> showDailyAttendanceList;
+  private List<ShowDailyAttendance> dailyAttendanceList;
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
 
 @Controller
@@ -51,9 +52,15 @@ public class UserController {
     strPeriod = "202412";
 
     // DBから該当期のデータを削除する
+    // トランザクション処理が必要
     service.deleteApproval(strPeriod);
     service.deleteMonthlyPeriod(strPeriod);
-//    service.deleteAttendanceRecords();
+    service.deleteAttendanceRecords(
+      LocalDate.of(2024, 11, 21),
+      LocalDate.of(2024, 12, 20)
+//      lib.getStartDate(period),
+//      lib.getEndDate(period)
+    );
 
     ShowMonthlyAttendance ShowMonthlyAttendance = lib.setAttendanceData(service, period);
     model.addAttribute("data", ShowMonthlyAttendance);

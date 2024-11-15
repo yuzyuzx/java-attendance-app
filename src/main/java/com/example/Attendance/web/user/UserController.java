@@ -33,11 +33,6 @@ public class UserController {
     return "user/test";
   }
 
-  @PostMapping
-  public String userForm(MonthlyAttendanceForm form, Model model) {
-    return "user/index";
-  }
-
   @GetMapping("/{period}")
   public String test(Model model, @PathVariable("period") YearMonth period) {
 //    lib.debugDate(period);
@@ -47,6 +42,29 @@ public class UserController {
 
 //    return "user/index";
     return "user/test";
+  }
+
+  @PostMapping
+  public String postUserForm(MonthlyAttendanceForm form, Model model) {
+    YearMonth period = lib.getCurrentPeriod(lib.getLocalDate());
+    String strPeriod = lib.dateTimeFormatter(period, "yyyyMM");
+    strPeriod = "202412";
+
+    // DBから該当期のデータを削除する
+    service.deleteApproval(strPeriod);
+    service.deleteMonthlyPeriod(strPeriod);
+//    service.deleteAttendanceRecords();
+
+    ShowMonthlyAttendance ShowMonthlyAttendance = lib.setAttendanceData(service, period);
+    model.addAttribute("data", ShowMonthlyAttendance);
+
+    System.out.println("postUserForm");
+    return "user/test";
+  }
+
+  @PostMapping("/{period}")
+  public String postUserFormPeriod(MonthlyAttendanceForm form, Model model, @PathVariable("period") YearMonth period) {
+    return "user/index";
   }
 
 }

@@ -29,7 +29,8 @@ public class UserController {
     ShowMonthlyAttendance ShowMonthlyAttendance = lib.setAttendanceData(service, period);
     model.addAttribute("data", ShowMonthlyAttendance);
 
-    return "user/index";
+//    return "user/index";
+    return "user/test";
   }
 
   @PostMapping
@@ -44,7 +45,8 @@ public class UserController {
     ShowMonthlyAttendance ShowMonthlyAttendance = lib.setAttendanceData(service, period);
     model.addAttribute("data", ShowMonthlyAttendance);
 
-    return "user/index";
+//    return "user/index";
+    return "user/test";
   }
 
 }

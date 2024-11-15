@@ -10,7 +10,7 @@ public class MonthlyAttendanceForm {
   private MonthlyPeriodForm monthlyPeriodForm;
 
   // 日別勤怠データ
-  private List<DailyAttendanceForm> dailyAttendance;
+  private List<DailyAttendanceForm> dailyAttendanceList;
 
   // 処理ボタン
   private String action;

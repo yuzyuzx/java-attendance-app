@@ -78,7 +78,6 @@ public class UserLibrary {
 
     ShowMonthlyAttendance showMonthlyAttendance = new ShowMonthlyAttendance();
 
-    // データ存在確認を行う
     MonthlyPeriod monthlyPeriod = service.fetchMonthlyPeriod(strPeriod);
 
     // ▽空の処理
@@ -150,7 +149,7 @@ public class UserLibrary {
     show.setRequestedAt(String.valueOf(obj.getRequestedAt()));
     show.setReviewedAt(String.valueOf(obj.getReviewedAt()));
 
-    return  show;
+    return show;
   }
 
   /**
@@ -222,7 +221,7 @@ public class UserLibrary {
     long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
 
     List<ShowDailyAttendance> list = new ArrayList<>();
-    for (int i = 0; i <= daysBetween; i++) {
+    for(int i = 0; i <= daysBetween; i++) {
       LocalDate currentDate = startDate.plusDays(i);
 
       ShowDailyAttendance show = new ShowDailyAttendance();

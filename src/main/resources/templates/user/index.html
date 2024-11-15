@@ -82,10 +82,10 @@
       <input type="hidden" th:id="monthlyPeriodFormWorkHoursMonth" th:name="monthlyPeriodForm.workHoursMonth" th:value="(${data.monthlyPeriod.workHoursMonth} == '') ? 0.0 : ${data.monthlyPeriod.workHoursMonth}">
       <input type="hidden" th:id="monthlyPeriodFormWorkHoursMonthHoliday" th:name="monthlyPeriodForm.workHoursMonthHoliday" th:value="(${data.monthlyPeriod.workHoursMonthHoliday} == '') ? 0.0 : ${data.monthlyPeriod.workHoursMonthHoliday}">
 
-      <div class="d-flex justify-content-end col-xl-2 col-sm-3 col-5 order-last">
+      <div class="d-flex justify-content-end col-xl-2 col-sm-3 col-5 order-last" th:classappend="(${data.approval.status} == '1') ? 'd-none' : ''">
         <button style="" type="submit" class="btn btn-primary" name="action" value="save">登録</button>
       </div>
-      <div class="d-flex justify-content-end col-xl-10 col-sm-9 col-7" name="action" value="approval-request">
+      <div class="d-flex justify-content-end col-xl-10 col-sm-9 col-7" th:classappend="(${data.approval.status} == '1') ? 'd-none' : ''">
         <button style="" type="submit" class="btn btn-primary" name="action" value="approval-request">承認依頼</button>
       </div>
     </div>

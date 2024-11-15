@@ -1,46 +1,25 @@
 // ページ開始時処理
 $(document).ready(function() {
     // 時間要素に対してフォーカスアウトイベント追加
-    handleBusinessDayBlur('.businessday-start', '.businessday-end', '.businessday-time', '.businessday-time-total', true);
-    handleBusinessDayBlur('.businessday-end', '.businessday-start', '.businessday-time', '.businessday-time-total', false);
-    handleBusinessDayBlur('.holiday-start', '.holiday-end', '.holiday-time', '.holiday-time-total', true);
-    handleBusinessDayBlur('.holiday-end', '.holiday-start', '.holiday-time', '.holiday-time-total', false);
+    handleBusinessDayBlur('.businessday-start', '.businessday-end', '.businessday-time', '.businessday-time-total', '.businessday-time-post', '#monthlyPeriodFormWorkHoursMonth', true);
+    handleBusinessDayBlur('.businessday-end', '.businessday-start', '.businessday-time', '.businessday-time-total', '.businessday-time-post', '#monthlyPeriodFormWorkHoursMonth', false);
+    handleBusinessDayBlur('.holiday-start', '.holiday-end', '.holiday-time', '.holiday-time-total', '.holiday-time-post', '#monthlyPeriodFormWorkHoursMonthHoliday', true);
+    handleBusinessDayBlur('.holiday-end', '.holiday-start', '.holiday-time', '.holiday-time-total', '.holiday-time-post', '#monthlyPeriodFormWorkHoursMonthHoliday', false);
 
     // 表示する勤務表の期を設定
     $('.attendance-period').text($('#year').val() + '年 ' + $('#period').val() + '月 期');
 
-    // 検索ボタン処理
-    $('.search').click(function() {
-        let search = $(this).val();
-        $('#month').val(Number($('#month').val()) + Number(search));
-    });
 });
 
 // blurイベントを設定
-function handleBusinessDayBlur(mainClass, subClass, siblingClass, totalTimeClass, isStart) {
+function handleBusinessDayBlur(mainClass, subClass, siblingClass, totalTimeClass, inputTimePostClass, calcResultId, isStart) {
     $(mainClass).blur(function() {
         const mainInputVal = $(this).val(); // 入力された値を取得
         const siblingElement = $(this).parent().siblings(siblingClass);
         const subInputVal = $(this).parent()[isStart ? 'next' : 'prev']().find(subClass).val();
-
-        // 入力値が未入力の場合、値を空にして終了
-        /*if (!mainInputVal)
-        {
-            $(this).val('');
-            siblingElement.text('');
-            return;
-        }*/
+        let inputTimePostElement = $(this).parent().siblings('.otherPostdata').find(inputTimePostClass);
 
         let w_mainInputVal = mainInputVal;
-
-        // 数値チェック
-        /*if (mainInputVal.replace(':','').match(/^\d+$/) === null)
-        {
-            // チェックエラーは入力値を空にする
-            $(this).val('');
-            siblingElement.text('');
-            return;
-        }*/
 
         // 数値チェック、時間型チェック、00:00～33:29チェック
         if (!inputFormatCheck(mainInputVal))
@@ -48,6 +27,7 @@ function handleBusinessDayBlur(mainClass, subClass, siblingClass, totalTimeClass
             // チェックエラーは入力値を空にする
             $(this).val('');
             siblingElement.text('');
+            $(inputTimePostElement).val('0.0');
         }
         else
         {
@@ -80,10 +60,16 @@ function handleBusinessDayBlur(mainClass, subClass, siblingClass, totalTimeClass
                 attendanceTimeTotal = attendanceTimeTotal + Number(attendanceTime);
         });
         $(totalTimeClass).text(attendanceTimeTotal);
+        $(calcResultId).val(attendanceTimeTotal);
 
         // 入力値が時刻形式でない場合に時刻形式の値を再設定
         if (mainInputVal !== w_mainInputVal)
             $(this).val(w_mainInputVal);
+
+        // 入力値を登録用の項目へコピー
+        if (siblingElement.text() != '')
+            $(inputTimePostElement).val(siblingElement.text());
+
     });
 }
 

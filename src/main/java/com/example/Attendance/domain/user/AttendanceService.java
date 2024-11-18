@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -27,6 +29,69 @@ public class AttendanceService {
 
   public Approval fetchApproval(String period) {
     return repository.fetchApproval(period);
+  }
+
+  @Transactional
+  public void registerMonthlyPeriod(
+    String period,
+    LocalDate startDate,
+    LocalDate endDate,
+    double workHoursMonth,
+    double workHoursMonthHoliday,
+    LocalDateTime createdAt
+  ) {
+    repository.registerMonthlyPeriod(
+      period,
+      startDate,
+      endDate,
+      workHoursMonth,
+      workHoursMonthHoliday,
+      createdAt
+    );
+  }
+
+  @Transactional
+  public void registerApproval(
+    String period,
+    char status,
+    LocalDateTime requestedAt,
+    LocalDateTime reviewedAt,
+    LocalDateTime createdAt
+  ) {
+    repository.registerApproval(period, status, requestedAt, reviewedAt, createdAt);
+  }
+
+  @Transactional
+  public void registerDailyAttendanceRecords(
+    LocalDate date,
+    String month,
+    String day,
+    String dayOfWeek,
+    LocalTime startTime,
+    LocalTime endTime,
+    double workHours,
+    LocalTime startTimeHoliday,
+    LocalTime endTimeHoliday,
+    double workHoursHoliday,
+    char dayType,
+    String comment,
+    String holidayName
+  ) {
+    repository.registerDailyAttendanceRecords(
+      date,
+      month,
+      day,
+      dayOfWeek,
+      startTime,
+      endTime,
+      workHours,
+      startTimeHoliday,
+      endTimeHoliday,
+      workHoursHoliday,
+      dayType,
+      comment,
+      holidayName
+    );
   }
 
   @Transactional

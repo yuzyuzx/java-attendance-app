@@ -1,5 +1,4 @@
 create table attendance_records (
-  record_id BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `date` DATE NOT NULL,
   `month` VARCHAR(10) NOT NULL,
   `day` VARCHAR(10) NOT NULL,
@@ -32,5 +31,6 @@ create table approval (
   `period` VARCHAR(10) NOT NULL,
   `status` CHAR(1) NOT NULL,
   `requested_at` TIMESTAMP NOT NULL,
-  `reviewed_at` TIMESTAMP NOT NULL
-)
+  `reviewed_at` TIMESTAMP NOT NULL,
+  `created_at` TIMESTAMP NOT NULL
+);

@@ -1,6 +1,7 @@
 package com.example.Attendance.web.user;
 
 import com.example.Attendance.domain.user.*;
+import com.example.Attendance.web.user.form.DailyAttendanceForm;
 import com.example.Attendance.web.user.form.MonthlyAttendanceForm;
 import com.example.Attendance.web.user.show.ShowMonthlyAttendance;
 import lombok.RequiredArgsConstructor;
@@ -11,8 +12,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.YearMonth;
+import java.util.Objects;
 
 @Controller
 @RequiredArgsConstructor
@@ -30,8 +33,8 @@ public class UserController {
     ShowMonthlyAttendance ShowMonthlyAttendance = lib.setAttendanceData(service, period);
     model.addAttribute("data", ShowMonthlyAttendance);
 
-//    return "user/index";
-    return "user/test";
+    return "user/index";
+//    return "user/test";
   }
 
   @GetMapping("/{period}")
@@ -62,17 +65,78 @@ public class UserController {
     service.deleteApproval(strPeriod);
     service.deleteMonthlyPeriod(strPeriod);
     service.deleteAttendanceRecords(
-//      LocalDate.of(2024, 11, 21),
-//      LocalDate.of(2024, 12, 20)
       lib.getStartDate(period),
       lib.getEndDate(period)
     );
+    // / 削除処理
+
+    // 期データ登録
+    // monthly_period table
+    service.registerMonthlyPeriod(
+      strPeriod,
+      lib.getStartDate(period),
+      lib.getEndDate(period),
+      form.getMonthlyPeriodForm().getWorkHoursMonth(),
+      form.getMonthlyPeriodForm().getWorkHoursMonthHoliday(),
+      LocalDateTime.now()
+    );
+
+
+    // 承認登録
+    char approvalStatus = '0';
+    if(Objects.equals(form.getAction(), "approval-request")) {
+      approvalStatus = '1';
+    }
+
+    // approval table
+    service.registerApproval(
+      strPeriod,
+      approvalStatus,
+      LocalDateTime.of(1900, 1, 1, 0, 0, 0),
+      LocalDateTime.of(1900, 1, 1, 0, 0, 0),
+      LocalDateTime.now()
+    );
+
+    // 勤怠日別データ登録
+    for(DailyAttendanceForm obj : form.getDailyAttendanceList()) {
+      if(obj.getStartTime() == null) {
+        obj.setStartTime(LocalTime.of(0, 0, 0));
+      }
+
+      if(obj.getEndTime() == null) {
+        obj.setEndTime(LocalTime.of(0, 0, 0));
+      }
+
+      if(obj.getStartTimeHoliday() == null) {
+        obj.setStartTimeHoliday(LocalTime.of(0, 0, 0));
+      }
+
+      if(obj.getEndTimeHoliday() == null) {
+        obj.setEndTimeHoliday(LocalTime.of(0, 0, 0));
+      }
+
+      service.registerDailyAttendanceRecords(
+        obj.getDate(),
+        obj.getMonth(),
+        obj.getDay(),
+        obj.getDayOfWeek(),
+        obj.getStartTime(),
+        obj.getEndTime(),
+        obj.getWorkHours(),
+        obj.getStartTimeHoliday(),
+        obj.getEndTimeHoliday(),
+        obj.getWorkHoursHoliday(),
+        obj.getDayType(),
+        obj.getComment(),
+        obj.getHolidayName()
+      );
+    }
 
     ShowMonthlyAttendance ShowMonthlyAttendance = lib.setAttendanceData(service, period);
     model.addAttribute("data", ShowMonthlyAttendance);
 
-    System.out.println("postUserForm");
-    return "user/test";
+    return "user/index";
+//    return "user/test";
   }
 
   @PostMapping("/{period}")

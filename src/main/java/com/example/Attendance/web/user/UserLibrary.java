@@ -170,7 +170,7 @@ public class UserLibrary {
     );
 
     show.setEndTime(
-      obj.getEndTime().equals(LocalTime.MIDNIGHT) ? "" : obj.getStartTime().toString()
+      obj.getEndTime().equals(LocalTime.MIDNIGHT) ? "" : obj.getEndTime().toString()
     );
 
     show.setWorkHours(
@@ -182,7 +182,7 @@ public class UserLibrary {
     );
 
     show.setEndTimeHoliday(
-      obj.getEndTimeHoliday().equals(LocalTime.MIDNIGHT) ? "" : obj.getStartTimeHoliday().toString()
+      obj.getEndTimeHoliday().equals(LocalTime.MIDNIGHT) ? "" : obj.getEndTimeHoliday().toString()
     );
 
     show.setWorkHoursHoliday(

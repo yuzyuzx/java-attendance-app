@@ -36,7 +36,13 @@ public class UserController {
 
   @GetMapping("/{period}")
   public String test(Model model, @PathVariable("period") YearMonth period) {
+    System.out.println(period);
 //    lib.debugDate(period);
+    if(!(period instanceof YearMonth)) {
+      YearMonth.of(2024, 11);
+      System.out.println("error");
+//      return "user/error";
+    }
 
     ShowMonthlyAttendance ShowMonthlyAttendance = lib.setAttendanceData(service, period);
     model.addAttribute("data", ShowMonthlyAttendance);
@@ -49,17 +55,17 @@ public class UserController {
   public String postUserForm(MonthlyAttendanceForm form, Model model) {
     YearMonth period = lib.getCurrentPeriod(lib.getLocalDate());
     String strPeriod = lib.dateTimeFormatter(period, "yyyyMM");
-    strPeriod = "202412";
+//    strPeriod = "202412";
 
     // DBから該当期のデータを削除する
     // トランザクション処理が必要
     service.deleteApproval(strPeriod);
     service.deleteMonthlyPeriod(strPeriod);
     service.deleteAttendanceRecords(
-      LocalDate.of(2024, 11, 21),
-      LocalDate.of(2024, 12, 20)
-//      lib.getStartDate(period),
-//      lib.getEndDate(period)
+//      LocalDate.of(2024, 11, 21),
+//      LocalDate.of(2024, 12, 20)
+      lib.getStartDate(period),
+      lib.getEndDate(period)
     );
 
     ShowMonthlyAttendance ShowMonthlyAttendance = lib.setAttendanceData(service, period);

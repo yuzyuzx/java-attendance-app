@@ -28,7 +28,7 @@ public interface AttendanceRepository {
   @Insert(
     "insert into " +
       " approval " +
-      " (period, status, requested_at, reviewed_at, created_at) " +
+      " (`period`, `status`, `requested_at`, `reviewed_at`, `created_at`) " +
       " values " +
       " (#{period}, #{status}, #{requestedAt}, #{reviewedAt}, #{createdAt}) "
   )
@@ -43,7 +43,7 @@ public interface AttendanceRepository {
   @Insert(
     "insert into " +
       " monthly_period " +
-      " (period, start_date, end_date, work_hours_month, work_hours_month_holiday, created_at) " +
+      " (`period`, `start_date`, `end_date`, `work_hours_month`, `work_hours_month_holiday`, `created_at`) " +
       " values " +
       " (#{period}, #{startDate}, #{endDate}, #{workHoursMonth}, #{workHoursMonthHoliday}, #{createdAt}) "
   )
@@ -59,7 +59,7 @@ public interface AttendanceRepository {
   @Insert(
     "insert into " +
       " attendance_records " +
-      " (`date`, `month`, `day`, day_of_week, start_time, end_time, work_hours, start_time_holiday, end_time_holiday, work_hours_holiday, day_type, comment, holiday_name) " +
+      " (`date`, `month`, `day`, `day_of_week`, `start_time`, `end_time`, `work_hours`, `start_time_holiday`, `end_time_holiday`, `work_hours_holiday`, `day_type`, `comment`, `holiday_name`) " +
       " values " +
       " (#{date}, #{month}, #{day}, #{dayOfWeek}, #{startTime}, #{endTime}, #{workHours}, #{startTimeHoliday}, #{endTimeHoliday}, #{workHoursHoliday}, #{dayType}, #{comment}, #{holidayName} )"
   )

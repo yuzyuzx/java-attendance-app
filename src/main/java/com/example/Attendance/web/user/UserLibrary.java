@@ -9,9 +9,7 @@ import com.example.Attendance.web.user.show.ShowMonthlyAttendance;
 import com.example.Attendance.web.user.show.ShowMonthlyPeriod;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.YearMonth;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,51 +21,55 @@ import java.util.regex.Pattern;
 @Component
 public class UserLibrary {
 
-  private final LocalDate now = LocalDate.now();
+  private LocalDate now;
 
-  public LocalDate currentTime() {
+  private YearMonth getPreviousPeriod(YearMonth period) {
+    return period.minusMonths(1);
+  }
+
+  private YearMonth getNextPeriod(YearMonth period) {
+    return period.plusMonths(1);
+  }
+
+  private LocalDate getStartDate(YearMonth period) {
+    YearMonth previousMonth = period.minusMonths(1);
+    return LocalDate.of(previousMonth.getYear(), previousMonth.getMonthValue(), 21);
+  }
+
+  private LocalDate getEndDate(YearMonth period) {
+    return LocalDate.of(period.getYear(), period.getMonthValue(), 20);
+  }
+
+  private String getYear(YearMonth period) {
+    return String.valueOf(period).split("-")[0];
+  }
+
+  private String getMonth(YearMonth period) {
+    return String.valueOf(period).split("-")[1];
+  }
+
+  private String dateTimeFormatter(YearMonth ym, String pettern) {
+    DateTimeFormatter f = DateTimeFormatter.ofPattern(pettern);
+    return f.format(ym);
+  }
+
+  public void setLocalDateNow() {
+    this.now = LocalDate.now();
+  }
+
+  private LocalDate currentTime() {
     return now;
   }
 
   public YearMonth getCurrentPeriod() {
     YearMonth ym = YearMonth.of(currentTime().getYear(), currentTime().getMonthValue());
 
-    int day = now.getDayOfMonth();
+    int day = currentTime().getDayOfMonth();
     if(20 < day) {
       ym = ym.plusMonths(1);
     }
 
     return ym;
-  }
-
-  public YearMonth getPreviousPeriod(YearMonth period) {
-    return period.minusMonths(1);
-  }
-
-  public YearMonth getNextPeriod(YearMonth period) {
-    return period.plusMonths(1);
-  }
-
-  public LocalDate getStartDate(YearMonth period) {
-    YearMonth previousMonth = period.minusMonths(1);
-    return LocalDate.of(previousMonth.getYear(), previousMonth.getMonthValue(), 21);
-  }
-
-  public LocalDate getEndDate(YearMonth period) {
-    return LocalDate.of(period.getYear(), period.getMonthValue(), 20);
-  }
-
-  public String getYear(YearMonth period) {
-    return String.valueOf(period).split("-")[0];
-  }
-
-  public String getMonth(YearMonth period) {
-    return String.valueOf(period).split("-")[1];
-  }
-
-  public String dateTimeFormatter(YearMonth ym, String pettern) {
-    DateTimeFormatter f = DateTimeFormatter.ofPattern(pettern);
-    return f.format(ym);
   }
 
   /**
@@ -193,7 +195,6 @@ public class UserLibrary {
 
     return !m.matches();
   }
-
 
   /**
    * MonthlyPeriodクラスのプロパティをShowMonthlyPeriodクラスのプロパティに入れ替える
@@ -398,9 +399,6 @@ public class UserLibrary {
     if(result.matches("^\\d{2}:\\d{2}$")) {
       result = String.format("%s:00", result);
     }
-
-    // 末尾に`:00`を付与する
-    System.out.println(result);
 
     return result;
   }

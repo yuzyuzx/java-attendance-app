@@ -23,6 +23,8 @@ public class UserController {
 
   @GetMapping
   public String index(Model model) {
+    // アクセスごとに日時更新を行う
+    lib.setLocalDateNow();
     YearMonth period = lib.getCurrentPeriod();
 
     ShowMonthlyAttendance ShowMonthlyAttendance = lib.setAttendanceData(service, period);
@@ -47,6 +49,7 @@ public class UserController {
 
   @PostMapping
   public String postUserForm(MonthlyAttendanceForm form, Model model) {
+    // 画面を開いた日時の期で登録を行う
     YearMonth period = lib.getCurrentPeriod();
 
     try {
@@ -59,7 +62,6 @@ public class UserController {
     model.addAttribute("data", ShowMonthlyAttendance);
 
     return "user/index";
-//    return "user/test";
   }
 
   @PostMapping("/{period}")

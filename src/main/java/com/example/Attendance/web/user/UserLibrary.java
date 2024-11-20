@@ -2,6 +2,8 @@ package com.example.Attendance.web.user;
 
 
 import com.example.Attendance.domain.user.*;
+import com.example.Attendance.web.user.form.DailyAttendanceForm;
+import com.example.Attendance.web.user.form.MonthlyAttendanceForm;
 import com.example.Attendance.web.user.show.ShowApproval;
 import com.example.Attendance.web.user.show.ShowDailyAttendance;
 import com.example.Attendance.web.user.show.ShowMonthlyAttendance;
@@ -9,12 +11,16 @@ import com.example.Attendance.web.user.show.ShowMonthlyPeriod;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.temporal.ChronoUnit;
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 public class UserLibrary {
@@ -260,6 +266,89 @@ public class UserLibrary {
     }
 
     return list;
+  }
+
+  public void registerAttendanceData(YearMonth period, AttendanceService service, MonthlyAttendanceForm form) {
+    String strPeriod = dateTimeFormatter(period, "yyyyMM");
+
+    // DBから該当期のデータを削除する
+    // トランザクション処理が必要
+    service.deleteApproval(strPeriod);
+    service.deleteMonthlyPeriod(strPeriod);
+    service.deleteAttendanceRecords(
+      getStartDate(period),
+      getEndDate(period)
+    );
+    // / 削除処理
+
+    // 期データ登録
+    // monthly_period table
+    service.registerMonthlyPeriod(
+      strPeriod,
+      getStartDate(period),
+      getEndDate(period),
+      form.getMonthlyPeriodForm().getWorkHoursMonth(),
+      form.getMonthlyPeriodForm().getWorkHoursMonthHoliday(),
+      LocalDateTime.now()
+    );
+
+
+    // 承認登録
+    char approvalStatus = '0';
+    if(Objects.equals(form.getAction(), "approval-request")) {
+      approvalStatus = '1';
+    }
+
+    // approval table
+    service.registerApproval(
+      strPeriod,
+      approvalStatus,
+      LocalDateTime.of(1900, 1, 1, 0, 0, 0),
+      LocalDateTime.of(1900, 1, 1, 0, 0, 0),
+      LocalDateTime.now()
+    );
+
+    // 勤怠日別データ登録
+    for(DailyAttendanceForm obj : form.getDailyAttendanceList()) {
+      if(obj.getStartTime() == null) {
+        obj.setStartTime(LocalTime.of(0, 0, 0));
+      }
+
+      if(obj.getEndTime() == null) {
+        obj.setEndTime(LocalTime.of(0, 0, 0));
+      }
+
+      if(obj.getStartTimeHoliday() == null) {
+        obj.setStartTimeHoliday(LocalTime.of(0, 0, 0));
+      }
+
+      if(obj.getEndTimeHoliday() == null) {
+        obj.setEndTimeHoliday(LocalTime.of(0, 0, 0));
+      }
+
+      service.registerDailyAttendanceRecords(
+        obj.getDate(),
+        obj.getMonth(),
+        obj.getDay(),
+        obj.getDayOfWeek(),
+        obj.getStartTime(),
+        obj.getEndTime(),
+        obj.getWorkHours(),
+        obj.getStartTimeHoliday(),
+        obj.getEndTimeHoliday(),
+        obj.getWorkHoursHoliday(),
+        obj.getDayType(),
+        obj.getComment(),
+        obj.getHolidayName()
+      );
+    }
+  }
+
+  public boolean isValidateYearMonthParam(String param) {
+    Pattern p = Pattern.compile("\\d{4}-\\d{2}");
+    Matcher m = p.matcher(param);
+
+    return m.matches();
   }
 
   public void debugDate(YearMonth period) {

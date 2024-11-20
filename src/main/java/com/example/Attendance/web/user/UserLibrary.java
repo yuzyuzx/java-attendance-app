@@ -344,7 +344,7 @@ public class UserLibrary {
   }
 
   public boolean isValidateYearMonthParam(String param) {
-    Pattern p = Pattern.compile("\\d{4}-\\d{2}");
+    Pattern p = Pattern.compile("^\\d{4}-(0[1-9]|1[0-2])$");
     Matcher m = p.matcher(param);
 
     return !m.matches();

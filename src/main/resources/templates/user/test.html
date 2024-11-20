@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title> ユーザー画面</title>
+<body>
+<form method="post">
+  <div>
+    <p>MonthlyPeriod</p>
+    <ul>
+      <input type="text" th:value="${data.monthlyPeriod.period}" name="monthlyPeriodForm.period"/>
+      <input type="text" th:value="${data.monthlyPeriod.workHoursMonth}" name="monthlyPeriodForm.workHoursMonth"/>
+      <li th:text="${data.monthlyPeriod.startDate}"></li>
+      <li th:text="${data.monthlyPeriod.endDate}"></li>
+    </ul>
+  </div>
+  <hr>
+  <ul>
+    <li th:text="${data.approval.period}"></li>
+    <li th:text="${data.approval.status}"></li>
+    <li th:text="${data.approval.requestedAt}"></li>
+    <li th:text="${data.approval.reviewedAt}"></li>
+  </ul>
+  <hr>
+  <ul>
+    <!--    <li th:text="${data.dailyAttendanceList[0].date}"></li>-->
+    <!--    <li th:text="${data.dailyAttendanceList[0].dayOfWeek}"></li>-->
+  </ul>
+  <button type="submit" name="action" value="approval-request">承認依頼</button>
+  <button type="submit" name="action" value="save">登録</button>
+</form>
+</body>
+</html>

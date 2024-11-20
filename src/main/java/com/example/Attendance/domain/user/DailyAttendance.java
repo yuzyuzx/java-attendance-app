@@ -9,7 +9,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @Data
 public class DailyAttendance {
-  private long id;
+//  private long id;
 
   // 年月日
   private LocalDate date;

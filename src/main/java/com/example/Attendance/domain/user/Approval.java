@@ -15,4 +15,6 @@ public class Approval {
   private LocalDateTime requestedAt;
 
   private LocalDateTime reviewedAt;
+
+  private LocalDateTime createdAt;
 }

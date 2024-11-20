@@ -1,7 +1,8 @@
 package com.example.Attendance.web.user;
 
-
 import com.example.Attendance.domain.user.*;
+import com.example.Attendance.web.user.form.DailyAttendanceForm;
+import com.example.Attendance.web.user.form.MonthlyAttendanceForm;
 import com.example.Attendance.web.user.show.ShowApproval;
 import com.example.Attendance.web.user.show.ShowDailyAttendance;
 import com.example.Attendance.web.user.show.ShowMonthlyAttendance;
@@ -9,28 +10,28 @@ import com.example.Attendance.web.user.show.ShowMonthlyPeriod;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.temporal.ChronoUnit;
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 public class UserLibrary {
 
-  /**
-   * 現在の日付を取得する
-   */
-  public LocalDate getLocalDate() {
-    return LocalDate.now();
+  private final LocalDate now = LocalDate.now();
+
+  public LocalDate currentTime() {
+    return now;
   }
 
-  /**
-   * 現在日から期を計算する
-   */
-  public YearMonth getCurrentPeriod(LocalDate now) {
-    YearMonth ym = YearMonth.of(now.getYear(), now.getMonthValue());
+  public YearMonth getCurrentPeriod() {
+    YearMonth ym = YearMonth.of(currentTime().getYear(), currentTime().getMonthValue());
 
     int day = now.getDayOfMonth();
     if(20 < day) {
@@ -78,14 +79,13 @@ public class UserLibrary {
 
     ShowMonthlyAttendance showMonthlyAttendance = new ShowMonthlyAttendance();
 
-    // データ存在確認を行う
     MonthlyPeriod monthlyPeriod = service.fetchMonthlyPeriod(strPeriod);
 
-    // ▽空の処理
+    // データが存在しない
     if(monthlyPeriod == null) {
       showMonthlyAttendance.setYear(getYear(period));
       showMonthlyAttendance.setMonth(getMonth(period));
-      showMonthlyAttendance.setCurrentPeriod(period.toString());
+      showMonthlyAttendance.setCurrentPeriod(getCurrentPeriod().toString());
       showMonthlyAttendance.setPreviousPeriod(getPreviousPeriod(period).toString());
       showMonthlyAttendance.setNextPeriod(getNextPeriod(period).toString());
       showMonthlyAttendance.setMonthlyPeriod(setEmptyMonthlyPeriod(period));
@@ -94,7 +94,6 @@ public class UserLibrary {
 
       return showMonthlyAttendance;
     }
-    // △空の処理
 
     ShowMonthlyPeriod showMonthlyPeriod = setShowMonthlyPeriod(monthlyPeriod);
     showMonthlyAttendance.setMonthlyPeriod(showMonthlyPeriod);
@@ -102,7 +101,7 @@ public class UserLibrary {
     Approval approval = service.fetchApproval(strPeriod);
     showMonthlyAttendance.setApproval(setShowApproval(approval));
 
-    List<DailyAttendance> dailyAttendances = service.fetchAttendanceWithinPeriod(monthlyPeriod.getStartDate(), monthlyPeriod.getEndDate());
+    List<DailyAttendance> dailyAttendances = service.fetchAttendanceWithInPeriod(monthlyPeriod.getStartDate(), monthlyPeriod.getEndDate());
     List<ShowDailyAttendance> showDailyAttendanceList = new ArrayList<>();
     for(DailyAttendance obj : dailyAttendances) {
       ShowDailyAttendance showDailyAttendance = setShowDailyAttendance(obj);
@@ -112,7 +111,7 @@ public class UserLibrary {
 
     showMonthlyAttendance.setYear(getYear(period));
     showMonthlyAttendance.setMonth(getMonth(period));
-    showMonthlyAttendance.setCurrentPeriod(period.toString());
+    showMonthlyAttendance.setCurrentPeriod(getCurrentPeriod().toString());
     showMonthlyAttendance.setPreviousPeriod(getPreviousPeriod(period).toString());
     showMonthlyAttendance.setNextPeriod(getNextPeriod(period).toString());
 
@@ -150,7 +149,7 @@ public class UserLibrary {
     show.setRequestedAt(String.valueOf(obj.getRequestedAt()));
     show.setReviewedAt(String.valueOf(obj.getReviewedAt()));
 
-    return  show;
+    return show;
   }
 
   /**
@@ -171,7 +170,7 @@ public class UserLibrary {
     );
 
     show.setEndTime(
-      obj.getEndTime().equals(LocalTime.MIDNIGHT) ? "" : obj.getStartTime().toString()
+      obj.getEndTime().equals(LocalTime.MIDNIGHT) ? "" : obj.getEndTime().toString()
     );
 
     show.setWorkHours(
@@ -183,7 +182,7 @@ public class UserLibrary {
     );
 
     show.setEndTimeHoliday(
-      obj.getEndTimeHoliday().equals(LocalTime.MIDNIGHT) ? "" : obj.getStartTimeHoliday().toString()
+      obj.getEndTimeHoliday().equals(LocalTime.MIDNIGHT) ? "" : obj.getEndTimeHoliday().toString()
     );
 
     show.setWorkHoursHoliday(
@@ -222,7 +221,7 @@ public class UserLibrary {
     long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
 
     List<ShowDailyAttendance> list = new ArrayList<>();
-    for (int i = 0; i <= daysBetween; i++) {
+    for(int i = 0; i <= daysBetween; i++) {
       LocalDate currentDate = startDate.plusDays(i);
 
       ShowDailyAttendance show = new ShowDailyAttendance();
@@ -261,6 +260,110 @@ public class UserLibrary {
     }
 
     return list;
+  }
+
+  public void registerAttendanceData(
+    YearMonth period,
+    AttendanceService service,
+    MonthlyAttendanceForm form
+  ) {
+    String strPeriod = dateTimeFormatter(period, "yyyyMM");
+
+    // 該当期データ削除処理
+    service.deleteApproval(strPeriod);
+    service.deleteMonthlyPeriod(strPeriod);
+    service.deleteAttendanceRecords(
+      getStartDate(period),
+      getEndDate(period)
+    );
+
+    // 勤怠データが入力されていなければ処理を終了する
+    if(isEmptyDailyAttendanceData(form.getDailyAttendanceList())) {
+      return;
+    }
+
+    // 期データ登録処理
+    service.registerMonthlyPeriod(
+      strPeriod,
+      getStartDate(period),
+      getEndDate(period),
+      form.getMonthlyPeriodForm().getWorkHoursMonth(),
+      form.getMonthlyPeriodForm().getWorkHoursMonthHoliday(),
+      LocalDateTime.now()
+    );
+
+
+    // 承認登録処理
+    char approvalStatus = '0';
+    if(Objects.equals(form.getAction(), "approval-request")) {
+      approvalStatus = '1';
+    }
+
+    service.registerApproval(
+      strPeriod,
+      approvalStatus,
+      LocalDateTime.of(1900, 1, 1, 0, 0, 0),
+      LocalDateTime.of(1900, 1, 1, 0, 0, 0),
+      LocalDateTime.now()
+    );
+
+    // 勤怠日別データ登録処理
+    for(DailyAttendanceForm obj : form.getDailyAttendanceList()) {
+      if(obj.getStartTime() == null) {
+        obj.setStartTime(LocalTime.of(0, 0, 0));
+      }
+
+      if(obj.getEndTime() == null) {
+        obj.setEndTime(LocalTime.of(0, 0, 0));
+      }
+
+      if(obj.getStartTimeHoliday() == null) {
+        obj.setStartTimeHoliday(LocalTime.of(0, 0, 0));
+      }
+
+      if(obj.getEndTimeHoliday() == null) {
+        obj.setEndTimeHoliday(LocalTime.of(0, 0, 0));
+      }
+
+      service.registerDailyAttendanceRecords(
+        obj.getDate(),
+        obj.getMonth(),
+        obj.getDay(),
+        obj.getDayOfWeek(),
+        obj.getStartTime(),
+        obj.getEndTime(),
+        obj.getWorkHours(),
+        obj.getStartTimeHoliday(),
+        obj.getEndTimeHoliday(),
+        obj.getWorkHoursHoliday(),
+        obj.getDayType(),
+        obj.getComment(),
+        obj.getHolidayName()
+      );
+    }
+  }
+
+  public boolean isValidateYearMonthParam(String param) {
+    Pattern p = Pattern.compile("^\\d{4}-(0[1-9]|1[0-2])$");
+    Matcher m = p.matcher(param);
+
+    return !m.matches();
+  }
+
+  private boolean isEmptyDailyAttendanceData(List<DailyAttendanceForm> list) {
+    for(DailyAttendanceForm obj : list) {
+      if(obj.getWorkHours() != 0.0) {
+        return false;
+      }
+      if(obj.getWorkHoursHoliday() != 0.0) {
+        return false;
+      }
+      if(!Objects.equals(obj.getComment(), "")) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   public void debugDate(YearMonth period) {

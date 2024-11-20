@@ -19,7 +19,7 @@ public class AttendanceService {
     return repository.fetchAttendanceRecords();
   }
 
-  public List<DailyAttendance> fetchAttendanceWithinPeriod(LocalDate startDate, LocalDate endDate) {
+  public List<DailyAttendance> fetchAttendanceWithInPeriod(LocalDate startDate, LocalDate endDate) {
     return repository.fetchAttendanceWithinPeriod(startDate, endDate);
   }
 

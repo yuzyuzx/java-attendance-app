@@ -1,7 +1,6 @@
 package com.example.Attendance.web.user;
 
 import com.example.Attendance.domain.user.*;
-import com.example.Attendance.web.user.form.DailyAttendanceForm;
 import com.example.Attendance.web.user.form.MonthlyAttendanceForm;
 import com.example.Attendance.web.user.show.ShowMonthlyAttendance;
 import lombok.RequiredArgsConstructor;
@@ -12,12 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.YearMonth;
-import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Controller
 @RequiredArgsConstructor
@@ -29,7 +23,7 @@ public class UserController {
 
   @GetMapping
   public String index(Model model) {
-    YearMonth period = lib.getCurrentPeriod(lib.getLocalDate());
+    YearMonth period = lib.getCurrentPeriod();
 
     ShowMonthlyAttendance ShowMonthlyAttendance = lib.setAttendanceData(service, period);
     model.addAttribute("data", ShowMonthlyAttendance);
@@ -39,9 +33,9 @@ public class UserController {
   }
 
   @GetMapping("/{period}")
-  public String test(Model model, @PathVariable("period") String pathPeriod) {
+  public String addPeriodParamIndex(Model model, @PathVariable("period") String pathPeriod) {
     // 不正なURLはユーザートップ画面にリダイレクトする
-    if(!lib.isValidateYearMonthParam(pathPeriod)) {
+    if(lib.isValidateYearMonthParam(pathPeriod)) {
       return "redirect:/user";
     }
 
@@ -55,7 +49,7 @@ public class UserController {
 
   @PostMapping
   public String postUserForm(MonthlyAttendanceForm form, Model model) {
-    YearMonth period = lib.getCurrentPeriod(lib.getLocalDate());
+    YearMonth period = lib.getCurrentPeriod();
 
     try {
       lib.registerAttendanceData(period, service, form);
@@ -71,9 +65,13 @@ public class UserController {
   }
 
   @PostMapping("/{period}")
-  public String postUserFormPeriod(MonthlyAttendanceForm form, Model model, @PathVariable("period") String pathPeriod) {
+  public String postUserFormAddPeriodParam(
+    MonthlyAttendanceForm form,
+    Model model,
+    @PathVariable("period") String pathPeriod
+  ) {
     // 不正なURLはユーザートップ画面にリダイレクトする
-    if(!lib.isValidateYearMonthParam(pathPeriod)) {
+    if(lib.isValidateYearMonthParam(pathPeriod)) {
       return "redirect:/user";
     }
 
@@ -87,6 +85,7 @@ public class UserController {
 
     ShowMonthlyAttendance ShowMonthlyAttendance = lib.setAttendanceData(service, period);
     model.addAttribute("data", ShowMonthlyAttendance);
+
     return "user/index";
   }
 

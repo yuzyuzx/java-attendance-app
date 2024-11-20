@@ -36,8 +36,8 @@
 
   <form method="post" >
   <div class="row" th:if="${data} != null">
-    <div class="col-12 mb-3" style="overflow-x: auto; max-width: 100%;">
-      <table class="table table-bordered fixed-width">
+    <div class="col-12" style="overflow-x: auto; max-width: 100%;">
+      <table class="table table-bordered fixed-width mb-0">
         <thead>
         <tr>
           <th rowspan="2" class="text-center align-middle col-1">日付</th>
@@ -78,11 +78,17 @@
         </tfoot>
       </table>
     </div>
-    <div class="d-flex justify-content-end col-12" th:if="${data.approval.status} == 0">
+    <div class="col-9">
+      ・承認依頼は勤怠登録後に行うこと<br />
+      ・時間帯は30分単位とする<br />
+      ・休憩時間は、12:00～13:00/18:00～18:30/22:00～22:30/2:00～3:00/6:30～7:30で固定とする<br />
+      ・休憩時間は、仮眠、私用外出時とする
+    </div>
+    <div class="text-end justify-content-end col-3 mt-3" th:if="${data.approval.status} == 2">
       <button style="" type="submit" class="btn btn-primary" name="action" value="approval-update">承認</button>
     </div>
-    <div class="d-flex justify-content-end col-12" th:if="${data.approval.status} == 1">
-      <button style="" type="submit" class="btn btn-primary" name="action" value="approval-cancel">承認取消</button>
+    <div class="text-end justify-content-end col-3 mt-3" th:if="${data.approval.status} == 1">
+      <button style="" type="submit" class="btn btn-primary text-nowrap" name="action" value="approval-cancel">承認取消</button>
     </div>
     <input type="hidden" th:id="monthlyPeriodFormPeriod" th:name="monthlyPeriodForm.period" th:value="${data.monthlyPeriod.period}" >
   </div>

@@ -277,6 +277,11 @@ public class UserLibrary {
       getEndDate(period)
     );
 
+    // 勤怠データが入力されていなければ処理を終了する
+    if(isEmptyDailyAttendanceData(form.getDailyAttendanceList())) {
+      return;
+    }
+
     // 期データ登録処理
     service.registerMonthlyPeriod(
       strPeriod,
@@ -343,6 +348,22 @@ public class UserLibrary {
     Matcher m = p.matcher(param);
 
     return !m.matches();
+  }
+
+  private boolean isEmptyDailyAttendanceData(List<DailyAttendanceForm> list) {
+    for(DailyAttendanceForm obj : list) {
+      if(obj.getWorkHours() != 0.0) {
+        return false;
+      }
+      if(obj.getWorkHoursHoliday() != 0.0) {
+        return false;
+      }
+      if(!Objects.equals(obj.getComment(), "")) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   public void debugDate(YearMonth period) {

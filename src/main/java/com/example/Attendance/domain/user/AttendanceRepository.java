@@ -7,7 +7,6 @@ import org.apache.ibatis.annotations.Select;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 @Mapper
@@ -68,11 +67,11 @@ public interface AttendanceRepository {
     String month,
     String day,
     String dayOfWeek,
-    LocalTime startTime,
-    LocalTime endTime,
+    String startTime,
+    String endTime,
     double workHours,
-    LocalTime startTimeHoliday,
-    LocalTime endTimeHoliday,
+    String startTimeHoliday,
+    String endTimeHoliday,
     double workHoursHoliday,
     char dayType,
     String comment,

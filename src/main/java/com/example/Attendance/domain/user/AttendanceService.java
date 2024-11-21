@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -67,11 +66,11 @@ public class AttendanceService {
     String month,
     String day,
     String dayOfWeek,
-    LocalTime startTime,
-    LocalTime endTime,
+    String startTime,
+    String endTime,
     double workHours,
-    LocalTime startTimeHoliday,
-    LocalTime endTimeHoliday,
+    String startTimeHoliday,
+    String endTimeHoliday,
     double workHoursHoliday,
     char dayType,
     String comment,

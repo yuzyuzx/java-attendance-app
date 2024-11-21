@@ -29,7 +29,6 @@ public class UserController {
     model.addAttribute("data", ShowMonthlyAttendance);
 
     return "user/index";
-//    return "user/test";
   }
 
   @GetMapping("/{period}")
@@ -44,7 +43,6 @@ public class UserController {
     model.addAttribute("data", ShowMonthlyAttendance);
 
     return "user/index";
-//    return "user/test";
   }
 
   @PostMapping

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 @AllArgsConstructor
 @Data
@@ -24,19 +23,19 @@ public class DailyAttendance {
   private String dayOfWeek;
 
   // 勤務開始時刻
-  private LocalTime startTime;
+  private String startTime;
 
   // 勤務終了時刻
-  private LocalTime endTime;
+  private String endTime;
 
   // 実働稼働数
   private double workHours;
 
   // 休日勤務開始時刻
-  private LocalTime startTimeHoliday;
+  private String startTimeHoliday;
 
   // 休日勤務終了時刻
-  private LocalTime endTimeHoliday;
+  private String endTimeHoliday;
 
   // 休日実働稼働数
   private double workHoursHoliday;

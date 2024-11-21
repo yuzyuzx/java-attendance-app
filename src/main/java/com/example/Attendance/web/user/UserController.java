@@ -23,23 +23,65 @@ public class UserController {
 
   @GetMapping
   public String index(Model model) {
-    YearMonth period = lib.getCurrentPeriod(lib.getLocalDate());
-//    lib.debugDate(period);
+    YearMonth period = lib.getCurrentPeriod();
 
     ShowMonthlyAttendance ShowMonthlyAttendance = lib.setAttendanceData(service, period);
     model.addAttribute("data", ShowMonthlyAttendance);
 
     return "user/index";
-  }
-
-  @PostMapping
-  public String userForm(MonthlyAttendanceForm form, Model model) {
-    return "user/index";
+//    return "user/test";
   }
 
   @GetMapping("/{period}")
-  public String test(Model model, @PathVariable("period") YearMonth period) {
-//    lib.debugDate(period);
+  public String addPeriodParamIndex(Model model, @PathVariable("period") String pathPeriod) {
+    // 不正なURLはユーザートップ画面にリダイレクトする
+    if(lib.isValidateYearMonthParam(pathPeriod)) {
+      return "redirect:/user";
+    }
+
+    YearMonth period = YearMonth.parse(pathPeriod);
+    ShowMonthlyAttendance ShowMonthlyAttendance = lib.setAttendanceData(service, period);
+    model.addAttribute("data", ShowMonthlyAttendance);
+
+    return "user/index";
+//    return "user/test";
+  }
+
+  @PostMapping
+  public String postUserForm(MonthlyAttendanceForm form, Model model) {
+    YearMonth period = lib.getCurrentPeriod();
+
+    try {
+      lib.registerAttendanceData(period, service, form);
+    } catch(Exception e) {
+      System.out.println("Error post");
+    }
+
+    ShowMonthlyAttendance ShowMonthlyAttendance = lib.setAttendanceData(service, period);
+    model.addAttribute("data", ShowMonthlyAttendance);
+
+    return "user/index";
+//    return "user/test";
+  }
+
+  @PostMapping("/{period}")
+  public String postUserFormAddPeriodParam(
+    MonthlyAttendanceForm form,
+    Model model,
+    @PathVariable("period") String pathPeriod
+  ) {
+    // 不正なURLはユーザートップ画面にリダイレクトする
+    if(lib.isValidateYearMonthParam(pathPeriod)) {
+      return "redirect:/user";
+    }
+
+    YearMonth period = YearMonth.parse(pathPeriod);
+
+    try {
+      lib.registerAttendanceData(period, service, form);
+    } catch(Exception e) {
+      System.out.println("Error post");
+    }
 
     ShowMonthlyAttendance ShowMonthlyAttendance = lib.setAttendanceData(service, period);
     model.addAttribute("data", ShowMonthlyAttendance);

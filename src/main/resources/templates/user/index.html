@@ -25,17 +25,17 @@
 
   <form method="post">
     <div class="row">
-      <div class="col-12 mb-3" style="overflow-x: auto; max-width: 100%;">
-        <table class="table table-bordered fixed-width">
+      <div class="col-12" style="overflow-x: auto; max-width: 100%;">
+        <table class="table table-bordered fixed-width mb-0">
           <thead>
           <tr>
-            <th rowspan="2" class="text-center align-middle" style="width:5%">日付</th>
-            <th rowspan="2" class="text-center align-middle" style="width:5%">曜日</th>
-            <th colspan="2" class="text-center" style="width:15%">勤務時間</th>
-            <th colspan="2" class="text-center" style="width:15%">休日勤務時間</th>
-            <th rowspan="2" class="text-center align-middle" style="width:15%">実働時間数</th>
-            <th rowspan="2" class="text-center align-middle" style="width:15%">休日時間数</th>
-            <th rowspan="2" class="text-center align-middle" style="width:30%">備考</th>
+            <th rowspan="2" class="text-center align-middle col-1">日付</th>
+            <th rowspan="2" class="text-center align-middle col-1">曜日</th>
+            <th colspan="2" class="text-center col-2">勤務時間</th>
+            <th colspan="2" class="text-center col-2">休日勤務時間</th>
+            <th rowspan="2" class="text-center align-middle">実働時間数</th>
+            <th rowspan="2" class="text-center align-middle">休日時間数</th>
+            <th rowspan="2" class="text-center align-middle col-3">備考</th>
           </tr>
           <tr>
             <th class="text-center">開始</th>
@@ -82,11 +82,17 @@
       <input type="hidden" th:id="monthlyPeriodFormWorkHoursMonth" th:name="monthlyPeriodForm.workHoursMonth" th:value="(${data.monthlyPeriod.workHoursMonth} == '') ? 0.0 : ${data.monthlyPeriod.workHoursMonth}">
       <input type="hidden" th:id="monthlyPeriodFormWorkHoursMonthHoliday" th:name="monthlyPeriodForm.workHoursMonthHoliday" th:value="(${data.monthlyPeriod.workHoursMonthHoliday} == '') ? 0.0 : ${data.monthlyPeriod.workHoursMonthHoliday}">
 
-      <div class="d-flex justify-content-end col-xl-2 col-sm-3 col-5 order-last" th:classappend="(${data.approval.status} == '1') ? 'd-none' : ''">
-        <button style="" type="submit" class="btn btn-primary" name="action" value="save">登録</button>
+      <div class="col-xl-9 col-sm-8 col-6">
+      ・承認依頼は勤怠登録後に行うこと<br />
+      ・時間帯は30分単位とする<br />
+      ・休憩時間は、12:00～13:00/18:00～18:30/22:00～22:30/2:00～3:00/6:30～7:30で固定とする<br />
+      ・休憩時間は、仮眠、私用外出時とする
       </div>
-      <div class="d-flex justify-content-end col-xl-10 col-sm-9 col-7" th:classappend="(${data.approval.status} == '1') ? 'd-none' : ''">
-        <button style="" type="submit" class="btn btn-primary" name="action" value="approval-request">承認依頼</button>
+      <div class="text-end justify-content-end col-xl-1 col-sm-2 col-3 order-last mt-3" th:classappend="(${data.approval.status} == '1') ? 'd-none' : ''">
+        <button style="" type="submit" class="btn btn-primary text-nowrap" name="action" value="save">登録</button>
+      </div>
+      <div class="text-end justify-content-end col-xl-2 col-sm-2 col-3 mt-3" th:classappend="(${data.approval.status} == '1') ? 'd-none' : ''">
+        <button style="" type="submit" class="btn btn-primary text-nowrap" name="action" value="approval-request">承認依頼</button>
       </div>
     </div>
   </form>

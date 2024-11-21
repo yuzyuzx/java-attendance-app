@@ -46,7 +46,7 @@ public class AdminLibrary {
      * 現在日から期を計算する
      */
     public YearMonth getCurrentPeriod() {
-        return lib.getCurrentPeriod(LocalDate.now());
+        return lib.getCurrentPeriod();
     }
 
     /**

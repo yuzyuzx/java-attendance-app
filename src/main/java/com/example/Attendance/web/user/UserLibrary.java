@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -118,6 +117,95 @@ public class UserLibrary {
     return showMonthlyAttendance;
   }
 
+  public void registerAttendanceData(
+    YearMonth period,
+    AttendanceService service,
+    MonthlyAttendanceForm form
+  ) {
+    String strPeriod = dateTimeFormatter(period, "yyyyMM");
+
+    // 該当期データ削除処理
+    service.deleteApproval(strPeriod);
+    service.deleteMonthlyPeriod(strPeriod);
+    service.deleteAttendanceRecords(
+      getStartDate(period),
+      getEndDate(period)
+    );
+
+    // 勤怠データが入力されていなければ処理を終了する
+    if(isEmptyDailyAttendanceData(form.getDailyAttendanceList())) {
+      return;
+    }
+
+    // 期データ登録処理
+    service.registerMonthlyPeriod(
+      strPeriod,
+      getStartDate(period),
+      getEndDate(period),
+      form.getMonthlyPeriodForm().getWorkHoursMonth(),
+      form.getMonthlyPeriodForm().getWorkHoursMonthHoliday(),
+      LocalDateTime.now()
+    );
+
+
+    // 承認登録処理
+    char approvalStatus = '0';
+    if(Objects.equals(form.getAction(), "approval-request")) {
+      approvalStatus = '1';
+    }
+
+    service.registerApproval(
+      strPeriod,
+      approvalStatus,
+      LocalDateTime.of(1900, 1, 1, 0, 0, 0),
+      LocalDateTime.of(1900, 1, 1, 0, 0, 0),
+      LocalDateTime.now()
+    );
+
+    // 勤怠日別データ登録処理
+    for(DailyAttendanceForm obj : form.getDailyAttendanceList()) {
+      if(obj.getStartTime() == null) {
+        obj.setStartTime("00:00:00");
+      }
+
+      if(obj.getEndTime() == null) {
+        obj.setEndTime("00:00:00");
+      }
+
+      if(obj.getStartTimeHoliday() == null) {
+        obj.setStartTimeHoliday("00:00:00");
+      }
+
+      if(obj.getEndTimeHoliday() == null) {
+        obj.setEndTimeHoliday("00:00:00");
+      }
+
+      service.registerDailyAttendanceRecords(
+        obj.getDate(),
+        obj.getMonth(),
+        obj.getDay(),
+        obj.getDayOfWeek(),
+        obj.getStartTime(),
+        obj.getEndTime(),
+        obj.getWorkHours(),
+        obj.getStartTimeHoliday(),
+        obj.getEndTimeHoliday(),
+        obj.getWorkHoursHoliday(),
+        obj.getDayType(),
+        obj.getComment(),
+        obj.getHolidayName()
+      );
+    }
+  }
+
+  public boolean isValidateYearMonthParam(String param) {
+    Pattern p = Pattern.compile("^\\d{4}-(0[1-9]|1[0-2])$");
+    Matcher m = p.matcher(param);
+
+    return !m.matches();
+  }
+
+
   /**
    * MonthlyPeriodクラスのプロパティをShowMonthlyPeriodクラスのプロパティに入れ替える
    */
@@ -166,11 +254,11 @@ public class UserLibrary {
     show.setHolidayName(obj.getHolidayName());
 
     show.setStartTime(
-      obj.getStartTime().equals(LocalTime.MIDNIGHT) ? "" : obj.getStartTime().toString()
+      Objects.equals(obj.getStartTime(), "00:00:00") ? "" : obj.getStartTime()
     );
 
     show.setEndTime(
-      obj.getEndTime().equals(LocalTime.MIDNIGHT) ? "" : obj.getEndTime().toString()
+      Objects.equals(obj.getEndTime(), "00:00:00") ? "" : obj.getEndTime()
     );
 
     show.setWorkHours(
@@ -178,11 +266,11 @@ public class UserLibrary {
     );
 
     show.setStartTimeHoliday(
-      obj.getStartTimeHoliday().equals(LocalTime.MIDNIGHT) ? "" : obj.getStartTimeHoliday().toString()
+      Objects.equals(obj.getStartTimeHoliday(), "00:00:00") ? "" : obj.getStartTimeHoliday()
     );
 
     show.setEndTimeHoliday(
-      obj.getEndTimeHoliday().equals(LocalTime.MIDNIGHT) ? "" : obj.getEndTimeHoliday().toString()
+      Objects.equals(obj.getEndTimeHoliday(), "00:00:00") ? "" : obj.getEndTimeHoliday()
     );
 
     show.setWorkHoursHoliday(
@@ -262,116 +350,21 @@ public class UserLibrary {
     return list;
   }
 
-  public void registerAttendanceData(
-    YearMonth period,
-    AttendanceService service,
-    MonthlyAttendanceForm form
-  ) {
-    String strPeriod = dateTimeFormatter(period, "yyyyMM");
-
-    // 該当期データ削除処理
-    service.deleteApproval(strPeriod);
-    service.deleteMonthlyPeriod(strPeriod);
-    service.deleteAttendanceRecords(
-      getStartDate(period),
-      getEndDate(period)
-    );
-
-    // 勤怠データが入力されていなければ処理を終了する
-    if(isEmptyDailyAttendanceData(form.getDailyAttendanceList())) {
-      return;
-    }
-
-    // 期データ登録処理
-    service.registerMonthlyPeriod(
-      strPeriod,
-      getStartDate(period),
-      getEndDate(period),
-      form.getMonthlyPeriodForm().getWorkHoursMonth(),
-      form.getMonthlyPeriodForm().getWorkHoursMonthHoliday(),
-      LocalDateTime.now()
-    );
-
-
-    // 承認登録処理
-    char approvalStatus = '0';
-    if(Objects.equals(form.getAction(), "approval-request")) {
-      approvalStatus = '1';
-    }
-
-    service.registerApproval(
-      strPeriod,
-      approvalStatus,
-      LocalDateTime.of(1900, 1, 1, 0, 0, 0),
-      LocalDateTime.of(1900, 1, 1, 0, 0, 0),
-      LocalDateTime.now()
-    );
-
-    // 勤怠日別データ登録処理
-    for(DailyAttendanceForm obj : form.getDailyAttendanceList()) {
-      if(obj.getStartTime() == null) {
-        obj.setStartTime(LocalTime.of(0, 0, 0));
-      }
-
-      if(obj.getEndTime() == null) {
-        obj.setEndTime(LocalTime.of(0, 0, 0));
-      }
-
-      if(obj.getStartTimeHoliday() == null) {
-        obj.setStartTimeHoliday(LocalTime.of(0, 0, 0));
-      }
-
-      if(obj.getEndTimeHoliday() == null) {
-        obj.setEndTimeHoliday(LocalTime.of(0, 0, 0));
-      }
-
-      service.registerDailyAttendanceRecords(
-        obj.getDate(),
-        obj.getMonth(),
-        obj.getDay(),
-        obj.getDayOfWeek(),
-        obj.getStartTime(),
-        obj.getEndTime(),
-        obj.getWorkHours(),
-        obj.getStartTimeHoliday(),
-        obj.getEndTimeHoliday(),
-        obj.getWorkHoursHoliday(),
-        obj.getDayType(),
-        obj.getComment(),
-        obj.getHolidayName()
-      );
-    }
-  }
-
-  public boolean isValidateYearMonthParam(String param) {
-    Pattern p = Pattern.compile("^\\d{4}-(0[1-9]|1[0-2])$");
-    Matcher m = p.matcher(param);
-
-    return !m.matches();
-  }
-
   private boolean isEmptyDailyAttendanceData(List<DailyAttendanceForm> list) {
     for(DailyAttendanceForm obj : list) {
       if(obj.getWorkHours() != 0.0) {
         return false;
       }
+
       if(obj.getWorkHoursHoliday() != 0.0) {
         return false;
       }
+
       if(!Objects.equals(obj.getComment(), "")) {
         return false;
       }
     }
 
     return true;
-  }
-
-  public void debugDate(YearMonth period) {
-    System.out.println("debugDate\n");
-    System.out.printf("現在期: %s%n", period);
-    System.out.printf("前期: %s%n", getPreviousPeriod(period));
-    System.out.printf("翌期: %s%n", getNextPeriod(period));
-    System.out.printf("開始日: %s%n", getStartDate(period));
-    System.out.printf("終了日: %s%n", getEndDate(period));
   }
 }

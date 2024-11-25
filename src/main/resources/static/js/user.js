@@ -32,9 +32,10 @@ function handleBusinessDayBlur(mainClass, subClass, siblingClass, totalTimeClass
         else
         {
             // 先頭0埋め時刻の場合は先頭文字削除
-            if (mainInputVal.charAt(0) === '0' && mainInputVal.length >= 5)
+            if ((w_mainInputVal.charAt(0) === '0' && w_mainInputVal.length >= 5) ||
+                (w_mainInputVal.indexOf(":") === -1 && w_mainInputVal.charAt(0) === '0' && w_mainInputVal.length == 4))
             {
-                $(this).val($(this).val().slice(1));
+                w_mainInputVal = w_mainInputVal.slice(1);
             }
 
             // 入力値を時刻の形式に直す

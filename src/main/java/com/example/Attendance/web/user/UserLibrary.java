@@ -164,21 +164,10 @@ public class UserLibrary {
 
     // 勤怠日別データ登録処理
     for(DailyAttendanceForm obj : form.getDailyAttendanceList()) {
-      if(obj.getStartTime() == null) {
-        obj.setStartTime("00:00:00");
-      }
-
-      if(obj.getEndTime() == null) {
-        obj.setEndTime("00:00:00");
-      }
-
-      if(obj.getStartTimeHoliday() == null) {
-        obj.setStartTimeHoliday("00:00:00");
-      }
-
-      if(obj.getEndTimeHoliday() == null) {
-        obj.setEndTimeHoliday("00:00:00");
-      }
+      obj.setStartTime(formatTimeForRegister(obj.getStartTime()));
+      obj.setEndTime(formatTimeForRegister(obj.getEndTime()));
+      obj.setStartTimeHoliday(formatTimeForRegister(obj.getStartTimeHoliday()));
+      obj.setEndTimeHoliday(formatTimeForRegister(obj.getEndTimeHoliday()));
 
       service.registerDailyAttendanceRecords(
         obj.getDate(),
@@ -254,11 +243,11 @@ public class UserLibrary {
     show.setHolidayName(obj.getHolidayName());
 
     show.setStartTime(
-      Objects.equals(obj.getStartTime(), "00:00:00") ? "" : obj.getStartTime()
+      Objects.equals(obj.getStartTime(), "00:00:00") ? "" : formatTimeForDisplay(obj.getStartTime())
     );
 
     show.setEndTime(
-      Objects.equals(obj.getEndTime(), "00:00:00") ? "" : obj.getEndTime()
+      Objects.equals(obj.getEndTime(), "00:00:00") ? "" : formatTimeForDisplay(obj.getEndTime())
     );
 
     show.setWorkHours(
@@ -266,11 +255,11 @@ public class UserLibrary {
     );
 
     show.setStartTimeHoliday(
-      Objects.equals(obj.getStartTimeHoliday(), "00:00:00") ? "" : obj.getStartTimeHoliday()
+      Objects.equals(obj.getStartTimeHoliday(), "00:00:00") ? "" : formatTimeForDisplay(obj.getStartTimeHoliday())
     );
 
     show.setEndTimeHoliday(
-      Objects.equals(obj.getEndTimeHoliday(), "00:00:00") ? "" : obj.getEndTimeHoliday()
+      Objects.equals(obj.getEndTimeHoliday(), "00:00:00") ? "" : formatTimeForDisplay(obj.getEndTimeHoliday())
     );
 
     show.setWorkHoursHoliday(
@@ -367,4 +356,53 @@ public class UserLibrary {
 
     return true;
   }
+
+  /**
+   * 時間を画面表示用に変換する
+   * <p>
+   * 表示用フォーマット
+   * 9:00
+   * 10:00
+   */
+  private String formatTimeForDisplay(String time) {
+    String result = time;
+
+    // `00:00:00`形式は末尾の`:00`を削除する
+    if(time.matches("^\\d{2}:\\d{2}:\\d{2}$")) {
+      // 末尾の :00 を削除して返す
+      result = time.substring(0, 5);
+    }
+
+    // 最初の`0`を削除する
+    return result.replaceFirst("^0", "");
+  }
+
+  /**
+   * 時間をDB登録用に変換する
+   * <p>
+   * 登録用フォーマット
+   * 00:00:00
+   */
+  private String formatTimeForRegister(String time) {
+    String result = time;
+
+    if(result == null || result.isEmpty()) {
+      return "00:00:00";
+    }
+
+    // `9:00`など時間が一桁の場合は先頭に`0`を付与する
+    if(result.matches("^\\d:\\d{2}$")) {
+      result = String.format("0%s", result);
+    }
+
+    if(result.matches("^\\d{2}:\\d{2}$")) {
+      result = String.format("%s:00", result);
+    }
+
+    // 末尾に`:00`を付与する
+    System.out.println(result);
+
+    return result;
+  }
+
 }

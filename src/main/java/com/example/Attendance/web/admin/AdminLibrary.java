@@ -100,7 +100,7 @@ public class AdminLibrary {
 
         // フォーマットを適用
         String startPeriod = currentPeriod.minusMonths(PeriodRange).format(formatter);
-        String endPeriod = currentPeriod.plusMonths(PeriodRange).format(formatter);
+        String endPeriod = currentPeriod.format(formatter);
 
         // 承認データをDBから取得
         List<Approval> approvalList = service.fetchApprovalWithinPeriod(startPeriod, endPeriod);

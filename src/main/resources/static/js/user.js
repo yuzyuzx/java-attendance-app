@@ -9,6 +9,12 @@ $(document).ready(function() {
     // 表示する勤務表の期を設定
     $('.attendance-period').text($('#year').val() + '年 ' + $('#period').val() + '月 期');
 
+    // Enterキーキャンセル
+    $('.enter-cancel').on('keydown', function(event)
+    {
+        enterCancel(event);
+    });
+
 });
 
 // blurイベントを設定

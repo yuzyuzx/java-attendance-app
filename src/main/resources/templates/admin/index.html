@@ -6,6 +6,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="/css/main.css" rel="stylesheet">
   <script src="/js/jquery-3.7.1.slim.min.js"></script>
+  <script src="/js/main.js"></script>
   <script src="/js/admin.js"></script>
 </head>
 <body>
@@ -24,7 +25,7 @@
             th:each="item : ${periodList}"
             th:value="${item.periodValue}"
             th:text="${item.periodText}"
-            th:selected="${periodList} == 'defaultValue'"
+            th:selected="${item.periodValue} == ${selectPeriodValue}"
         ></option>
       </select>
       <button style="" type="submit" class="btn btn-secondary mx-1 search" th:value="表示">表示</button>

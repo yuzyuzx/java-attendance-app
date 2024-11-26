@@ -29,8 +29,8 @@ public class AdminController {
   public String index(Model model) {
 
     // 期ドロップダウンリストのデータ設定
-    YearMonth currenctPeriod = lib.getCurrentPeriod();
-    List<ShowPeriod> periodList = lib.setShowPeriodData(service, currenctPeriod);
+    YearMonth currentPeriod = lib.getCurrentPeriod();
+    List<ShowPeriod> periodList = lib.setShowPeriodData(service, currentPeriod);
     model.addAttribute("periodList", periodList);
 
     // 勤務表データ設定(初期表示時は表示しない)
@@ -45,14 +45,15 @@ public class AdminController {
   public String index(@RequestParam("periodOption") String periodOption, Model model) {
 
     // 期ドロップダウンリストのデータ設定
-    YearMonth currenctPeriod = lib.getCurrentPeriod();
-    List<ShowPeriod> periodList = lib.setShowPeriodData(service, currenctPeriod);
+    YearMonth currentPeriod = lib.getCurrentPeriod();
+    List<ShowPeriod> periodList = lib.setShowPeriodData(service, currentPeriod);
     model.addAttribute("periodList", periodList);
 
     // 勤務表データ設定
     if(periodOption == null || periodOption.isEmpty())
     {
       model.addAttribute("data", null);
+      model.addAttribute("selectPeriodValue", "default");
     }
     else
     {
@@ -62,6 +63,7 @@ public class AdminController {
       // 勤務表データを取得
       com.example.Attendance.web.user.show.ShowMonthlyAttendance ShowMonthlyAttendance = lib.setAttendanceData(period);
       model.addAttribute("data", ShowMonthlyAttendance);
+      model.addAttribute("selectPeriodValue", periodOption);
     }
 
     return "admin/index";
@@ -88,9 +90,10 @@ public class AdminController {
     model.addAttribute("data", null);
 
     // 期ドロップダウンリストのデータ設定
-    YearMonth currenctPeriod = lib.getCurrentPeriod();
-    List<ShowPeriod> periodList = lib.setShowPeriodData(service, currenctPeriod);
+    YearMonth currentPeriod = lib.getCurrentPeriod();
+    List<ShowPeriod> periodList = lib.setShowPeriodData(service, currentPeriod);
     model.addAttribute("periodList", periodList);
+    model.addAttribute("selectPeriodValue", "default");
 
     // 更新メッセージ設定
     model.addAttribute("resultMsg", lib.getApprovalUpdateResultMsg(lib.getApprovalUpdate(form.getAction())));

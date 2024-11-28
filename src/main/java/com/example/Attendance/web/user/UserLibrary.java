@@ -34,7 +34,7 @@ public class UserLibrary {
 
     int day = now.getDayOfMonth();
     if(20 < day) {
-      ym.plusMonths(1);
+      ym = ym.plusMonths(1);
     }
 
     return ym;

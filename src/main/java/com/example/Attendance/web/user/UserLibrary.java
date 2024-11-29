@@ -151,7 +151,7 @@ public class UserLibrary {
     // 承認登録処理
     char approvalStatus = '0';
     if(Objects.equals(form.getAction(), "approval-request")) {
-      approvalStatus = '1';
+      approvalStatus = '2';
     }
 
     service.registerApproval(

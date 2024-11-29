@@ -123,43 +123,59 @@ function workTimeCalc(starttime, endtime)
     adjusttime = 0;
 
     // 12~13
-    if (Number(start[0]) <= 12 && Number(end[0] + end[1]) >= 1230)
+    if (Number(start[0] + start[1]) <= 1200 && Number(end[0] + end[1]) >= 1230)
     {
         adjusttime = adjusttime + 0.5;
     }
-    if (Number(start[0]) <= 12 && Number(end[0] + end[1]) >= 1300)
+    if (Number(start[0] + start[1]) <= 1230 && Number(end[0] + end[1]) >= 1300)
     {
         adjusttime = adjusttime + 0.5;
     }
 
-    // 18~1830
+    // 18~18:30
     if (start[0] <= 18 && Number(end[0] + end[1]) >= 1830)
     {
         adjusttime = adjusttime + 0.5;
     }
 
-    // 22~2230
+    // 22~22:30
     if (start[0] <= 22 && Number(end[0] + end[1]) >= 2230)
     {
         adjusttime = adjusttime + 0.5;
     }
 
-    // 26~27
-    if (Number(start[0]) <= 26 && Number(end[0] + end[1]) >= 2630)
+    // 26:00~27:00、2:00~3:00
+    if (Number(start[0] + start[1]) <= 2600 && Number(end[0] + end[1]) >= 2630)
     {
         adjusttime = adjusttime + 0.5;
     }
-    if (Number(start[0]) <= 26 && Number(end[0] + end[1]) >= 2700)
+    if (Number(start[0] + start[1]) <= 2630 && Number(end[0] + end[1]) >= 2700)
+    {
+        adjusttime = adjusttime + 0.5;
+    }
+    if (Number(start[0] + start[1]) <= 200 && Number(end[0] + end[1]) >= 230)
+    {
+        adjusttime = adjusttime + 0.5;
+    }
+     if (Number(start[0] + start[1]) <= 230 && Number(end[0] + end[1]) >= 300)
     {
         adjusttime = adjusttime + 0.5;
     }
 
-    // 3030~3130
+    // 30:30~31:30、2:00~3:00
     if (Number(start[0] + start[1]) <= 3030 && Number(end[0] + end[1]) >= 3100)
     {
         adjusttime = adjusttime + 0.5;
     }
-    if (Number(start[0] + start[1]) <= 3030 && Number(end[0] + end[1]) >= 3130)
+    if (Number(start[0] + start[1]) <= 3100 && Number(end[0] + end[1]) >= 3130)
+    {
+        adjusttime = adjusttime + 0.5;
+    }
+    if (Number(start[0] + start[1]) <= 630 && Number(end[0] + end[1]) >= 700)
+    {
+        adjusttime = adjusttime + 0.5;
+    }
+    if (Number(start[0] + start[1]) <= 700 && Number(end[0] + end[1]) >= 730)
     {
         adjusttime = adjusttime + 0.5;
     }

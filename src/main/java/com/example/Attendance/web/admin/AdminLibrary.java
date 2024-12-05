@@ -50,6 +50,13 @@ public class AdminLibrary {
     }
 
     /**
+     * 現在日時をセットする
+     */
+    public void setLocalDateNow() {
+        lib.setLocalDateNow();
+    }
+
+    /**
      * 承認更新のアクションを取得する
      * @param approvalAction
      * @return

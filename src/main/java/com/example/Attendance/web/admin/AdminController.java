@@ -29,6 +29,7 @@ public class AdminController {
   public String index(Model model) {
 
     // 期ドロップダウンリストのデータ設定
+    lib.setLocalDateNow();
     YearMonth currentPeriod = lib.getCurrentPeriod();
     List<ShowPeriod> periodList = lib.setShowPeriodData(service, currentPeriod);
     model.addAttribute("periodList", periodList);
@@ -45,6 +46,7 @@ public class AdminController {
   public String index(@RequestParam("periodOption") String periodOption, Model model) {
 
     // 期ドロップダウンリストのデータ設定
+    lib.setLocalDateNow();
     YearMonth currentPeriod = lib.getCurrentPeriod();
     List<ShowPeriod> periodList = lib.setShowPeriodData(service, currentPeriod);
     model.addAttribute("periodList", periodList);
@@ -90,6 +92,7 @@ public class AdminController {
     model.addAttribute("data", null);
 
     // 期ドロップダウンリストのデータ設定
+    lib.setLocalDateNow();
     YearMonth currentPeriod = lib.getCurrentPeriod();
     List<ShowPeriod> periodList = lib.setShowPeriodData(service, currentPeriod);
     model.addAttribute("periodList", periodList);

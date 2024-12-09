@@ -430,5 +430,26 @@ public class UserLibrary {
     return !m.matches();
   }
 
+  /**
+   * 承認済の月であるか確認する
+   * <p>
+   * false 未承認
+   * true 承認済
+   */
+  public boolean isApproved(YearMonth period, AttendanceService service) {
+    Approval approval = service.fetchApproval(
+      dateTimeFormatter(period, "yyyyMM")
+    );
+
+    // データが存在していない
+    if(approval == null) {
+      return false;
+    }
+
+    // status = 1は承認済コード
+    // それ以外は未承認コード
+    return approval.getStatus() == '1';
+  }
+
 
 }

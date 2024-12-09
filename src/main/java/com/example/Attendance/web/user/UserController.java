@@ -52,6 +52,13 @@ public class UserController {
     // 画面を開いた日時の期で登録を行う
     YearMonth period = lib.getCurrentPeriod();
 
+    // 承認済の月であればデータを返すだけで、登録処理は行わない
+    if(lib.isApproved(period, service)) {
+      ShowMonthlyAttendance ShowMonthlyAttendance = lib.setAttendanceData(service, period);
+      model.addAttribute("data", ShowMonthlyAttendance);
+      return "user/index";
+    }
+
     try {
       lib.registerAttendanceData(period, service, form);
     } catch(Exception e) {
@@ -76,6 +83,13 @@ public class UserController {
     }
 
     YearMonth period = YearMonth.parse(pathPeriod);
+
+    // 承認済の月であればデータを返すだけで、登録処理は行わない
+    if(lib.isApproved(period, service)) {
+      ShowMonthlyAttendance ShowMonthlyAttendance = lib.setAttendanceData(service, period);
+      model.addAttribute("data", ShowMonthlyAttendance);
+      return "user/index";
+    }
 
     try {
       lib.registerAttendanceData(period, service, form);

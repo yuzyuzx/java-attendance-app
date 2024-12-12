@@ -229,24 +229,6 @@ public class UserLibrary {
     return list;
   }
 
-  private boolean isEmptyDailyAttendanceData(List<DailyAttendanceForm> list) {
-    for(DailyAttendanceForm obj : list) {
-      if(obj.getWorkHours() != 0.0) {
-        return false;
-      }
-
-      if(obj.getWorkHoursHoliday() != 0.0) {
-        return false;
-      }
-
-      if(!Objects.equals(obj.getComment(), "")) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
   /**
    * 時間を画面表示用に変換する
    * <p>
@@ -301,6 +283,32 @@ public class UserLibrary {
     }
 
     return ym;
+  }
+
+  /**
+   * 勤怠データが入力されているかチェックする
+   * <p>
+   * true: データが入力されていると判定
+   * - 実働時間数が0ではない
+   * - 休日稼働数が0ではない
+   * - コメントが入力されている
+   */
+  public boolean isEmptyDailyAttendanceData(List<DailyAttendanceForm> list) {
+    for(DailyAttendanceForm obj : list) {
+      if(obj.getWorkHours() != 0.0) {
+        return false;
+      }
+
+      if(obj.getWorkHoursHoliday() != 0.0) {
+        return false;
+      }
+
+      if(!Objects.equals(obj.getComment(), "")) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   /**
@@ -365,11 +373,6 @@ public class UserLibrary {
       getEndDate(period)
     );
 
-    // 勤怠データが入力されていなければ処理を終了する
-    if(isEmptyDailyAttendanceData(form.getDailyAttendanceList())) {
-      return;
-    }
-
     // 期データ登録処理
     service.registerMonthlyPeriod(
       strPeriod,
@@ -394,6 +397,9 @@ public class UserLibrary {
       LocalDateTime.of(1900, 1, 1, 0, 0, 0),
       LocalDateTime.now()
     );
+
+    // 勤務開始時間と終了時間がペアでセットされているか
+    validateTimePairInput(form.getDailyAttendanceList());
 
     // 勤怠日別データ登録処理
     for(DailyAttendanceForm obj : form.getDailyAttendanceList()) {
@@ -451,5 +457,49 @@ public class UserLibrary {
     return approval.getStatus() == '1';
   }
 
+  /**
+   * 勤務開始時間と終了時間がペアで入力されているかチェックする
+   * ペアで入力されていない場合、空の値にセットし直す
+   */
+  public void validateTimePairInput(List<DailyAttendanceForm> list) {
+    for(DailyAttendanceForm obj : list) {
+      String s = obj.getStartTime();
+      String e = obj.getEndTime();
+      String hs = obj.getStartTimeHoliday();
+      String he = obj.getEndTimeHoliday();
+
+      // 平日判定
+      // 平日は休日の開始時間と終了時間はnullになっている
+      if(Objects.isNull(hs) && Objects.isNull(he)) {
+        // 開始時間未入力 && 終了時間入力済
+        if(s.isEmpty() && !e.isEmpty()) {
+          obj.setStartTime("");
+          obj.setEndTime("");
+        }
+
+        // 開始時間入力済 && 終了時間未入力
+        if(!s.isEmpty() && e.isEmpty()) {
+          obj.setStartTime("");
+          obj.setEndTime("");
+        }
+      }
+
+      // 休日判定
+      // 休日は平日の開始時間と終了時間はnullになっている
+      if(Objects.isNull(s) && Objects.isNull(e)) {
+        // 休日開始時間未入力 && 休日終了時間入力済
+        if(hs.isEmpty() && !he.isEmpty()) {
+          obj.setStartTimeHoliday("");
+          obj.setEndTimeHoliday("");
+        }
+
+        // 休日開始時間入力済 && 休日終了時間未入力
+        if(!hs.isEmpty() && he.isEmpty()) {
+          obj.setStartTimeHoliday("");
+          obj.setEndTimeHoliday("");
+        }
+      }
+    }
+  }
 
 }

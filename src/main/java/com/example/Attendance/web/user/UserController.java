@@ -59,6 +59,13 @@ public class UserController {
       return "user/index";
     }
 
+    // 勤怠データが入力されていなければ処理を終了する
+    if(lib.isEmptyDailyAttendanceData(form.getDailyAttendanceList())) {
+      ShowMonthlyAttendance ShowMonthlyAttendance = lib.setAttendanceData(service, period);
+      model.addAttribute("data", ShowMonthlyAttendance);
+      return "user/index";
+    }
+
     try {
       lib.registerAttendanceData(period, service, form);
     } catch(Exception e) {
@@ -86,6 +93,13 @@ public class UserController {
 
     // 承認済の月であればデータを返すだけで、登録処理は行わない
     if(lib.isApproved(period, service)) {
+      ShowMonthlyAttendance ShowMonthlyAttendance = lib.setAttendanceData(service, period);
+      model.addAttribute("data", ShowMonthlyAttendance);
+      return "user/index";
+    }
+
+    // 勤怠データが入力されていなければ処理を終了する
+    if(lib.isEmptyDailyAttendanceData(form.getDailyAttendanceList())) {
       ShowMonthlyAttendance ShowMonthlyAttendance = lib.setAttendanceData(service, period);
       model.addAttribute("data", ShowMonthlyAttendance);
       return "user/index";

@@ -3,6 +3,7 @@ package com.example.Attendance.domain.admin;
 import com.example.Attendance.domain.user.Approval;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class AttendanceServiceAdmin {
         return repository.fetchApprovalWithinPeriod(startPeriod, endPeriod);
     }
 
+    @Transactional
     public int updateApprovalStatus(String status, String period) {
         return repository.updateApprovalStatus(status, period);
     }

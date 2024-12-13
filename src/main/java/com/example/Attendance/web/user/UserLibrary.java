@@ -231,7 +231,6 @@ public class UserLibrary {
 
   /**
    * 時間を画面表示用に変換する
-   * <p>
    * 表示用フォーマット
    * 9:00
    * 10:00
@@ -274,26 +273,14 @@ public class UserLibrary {
     return result;
   }
 
-  public YearMonth getCurrentPeriod() {
-    YearMonth ym = YearMonth.of(currentTime().getYear(), currentTime().getMonthValue());
-
-    int day = currentTime().getDayOfMonth();
-    if(20 < day) {
-      ym = ym.plusMonths(1);
-    }
-
-    return ym;
-  }
-
   /**
    * 勤怠データが入力されているかチェックする
-   * <p>
    * true: データが入力されていると判定
    * - 実働時間数が0ではない
    * - 休日稼働数が0ではない
    * - コメントが入力されている
    */
-  public boolean isEmptyDailyAttendanceData(List<DailyAttendanceForm> list) {
+  private boolean isEmptyDailyAttendanceData(List<DailyAttendanceForm> list) {
     for(DailyAttendanceForm obj : list) {
       if(obj.getWorkHours() != 0.0) {
         return false;
@@ -309,6 +296,17 @@ public class UserLibrary {
     }
 
     return true;
+  }
+
+  public YearMonth getCurrentPeriod() {
+    YearMonth ym = YearMonth.of(currentTime().getYear(), currentTime().getMonthValue());
+
+    int day = currentTime().getDayOfMonth();
+    if(20 < day) {
+      ym = ym.plusMonths(1);
+    }
+
+    return ym;
   }
 
   /**
@@ -438,7 +436,6 @@ public class UserLibrary {
 
   /**
    * 承認済の月であるか確認する
-   * <p>
    * false 未承認
    * true 承認済
    */
@@ -458,6 +455,30 @@ public class UserLibrary {
   }
 
   /**
+   * DBへの登録処理が可能か判定する
+   * <p>
+   * true: 登録可能
+   * false: 登録不可
+   */
+  public boolean canRegisterData(
+    YearMonth period,
+    AttendanceService service,
+    List<DailyAttendanceForm> list
+  ) {
+
+    Approval approval = service.fetchApproval(
+      dateTimeFormatter(period, "yyyyMM")
+    );
+
+    // 未登録月 && 勤怠データが未入力である
+    if(Objects.isNull(approval) && isEmptyDailyAttendanceData(list)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
    * 勤務開始時間と終了時間がペアで入力されているかチェックする
    * ペアで入力されていない場合、空の値にセットし直す
    */
@@ -470,7 +491,7 @@ public class UserLibrary {
 
       // 平日判定
       // 平日は休日の開始時間と終了時間はnullになっている
-      if(Objects.isNull(hs) && Objects.isNull(he)) {
+      if(Objects.isNull(hs) || Objects.isNull(he)) {
         // 開始時間未入力 && 終了時間入力済
         if(s.isEmpty() && !e.isEmpty()) {
           obj.setStartTime("");
@@ -486,7 +507,7 @@ public class UserLibrary {
 
       // 休日判定
       // 休日は平日の開始時間と終了時間はnullになっている
-      if(Objects.isNull(s) && Objects.isNull(e)) {
+      if(Objects.isNull(s) || Objects.isNull(e)) {
         // 休日開始時間未入力 && 休日終了時間入力済
         if(hs.isEmpty() && !he.isEmpty()) {
           obj.setStartTimeHoliday("");

@@ -238,11 +238,32 @@ public class UserLibrary {
   private String formatTimeForDisplay(String time) {
     String result = time;
 
-    // `00:00:00`形式は末尾の`:00`を削除する
-    if(time.matches("^\\d{2}:\\d{2}:\\d{2}$")) {
-      // 末尾の :00 を削除して返す
-      result = time.substring(0, 5);
+    if(!time.matches("^\\d{2}:\\d{2}:\\d{2}$")) {
+      return "";
     }
+
+    String[] parts = result.split(":");
+    if(parts.length != 3) {
+      return "";
+    }
+
+    try {
+      int first = Integer.parseInt(parts[0]);
+      int second = Integer.parseInt(parts[1]);
+
+      if(33 < first) {
+        return "";
+      }
+
+      if(59 < second) {
+        return "";
+      }
+    } catch(NumberFormatException e) {
+      return "";
+    }
+
+    // `00:00:00`形式は末尾の`:00`を削除する
+    result = time.substring(0, 5);
 
     // 最初の`0`を削除する
     return result.replaceFirst("^0", "");

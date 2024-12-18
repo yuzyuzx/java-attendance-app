@@ -46,14 +46,15 @@ public class AdminLibrary {
      * 現在日から期を計算する
      */
     public YearMonth getCurrentPeriod() {
-        return lib.getCurrentPeriod();
-    }
+        LocalDate currentTime = LocalDate.now();
+        YearMonth ym = YearMonth.of(currentTime.getYear(), currentTime.getMonthValue());
 
-    /**
-     * 現在日時をセットする
-     */
-    public void setLocalDateNow() {
-        lib.setLocalDateNow();
+        int day = currentTime.getDayOfMonth();
+        if(20 < day) {
+            ym = ym.plusMonths(1);
+        }
+
+        return ym;
     }
 
     /**

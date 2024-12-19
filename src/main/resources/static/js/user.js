@@ -89,6 +89,11 @@ function inputFormatCheck(inputVal)
         return false;
     }
 
+    if (inputVal.match(/^([0]?[0]):([0][0])$/) !== null || inputVal.match(/^([0]?[0])([0][0])$/) !== null)
+    {
+        return false;
+    }
+
     // 数値・時刻チェック
     if (((inputVal.match(/^([01]?[0-9]|[02]?[0-9]):([0-5][0-9])$/) !== null) || (inputVal.match(/^(3[0-2]):([0-5][0-9])$/) !== null || inputVal.match(/^(33):([0-2][0-9])$/) !== null))
     || ((inputVal.match(/^([01]?[0-9]|[02]?[0-9])([0-5][0-9])$/) !== null) || (inputVal.match(/^(3[0-2])([0-5][0-9])$/) !== null || inputVal.match(/^(33)([0-2][0-9])$/) !== null))
